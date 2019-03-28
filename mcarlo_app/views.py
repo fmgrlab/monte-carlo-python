@@ -18,6 +18,30 @@ def api_iteration(request):
     return JsonResponse(output.as_json())
 
 
+def api_volatility(request):
+    param = parse_param(request)
+    output = OutPut()
+    output.param = param
+    engine = Engine(param=param)
+    volatilties = engine.compute_constant_volatility_path()
+    number_of_iterations = 1
+    stock_price = engine.compute_stock_path(volatilties, number_of_iterations)
+    output.stock_price = stock_price
+    return JsonResponse(output.as_json())
+
+
+def api_risk(request):
+    param = parse_param(request)
+    output = OutPut()
+    output.param = param
+    engine = Engine(param=param)
+    volatilties = engine.compute_constant_volatility_path()
+    number_of_iterations = 1
+    stock_price = engine.compute_stock_path(volatilties, number_of_iterations)
+    output.stock_price = stock_price
+    return JsonResponse(output.as_json())
+
+
 def parse_param(request):
     param = Param()
     param.stock_initial = int(request.GET.get('stock_initial',100))

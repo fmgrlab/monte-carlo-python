@@ -18,4 +18,6 @@ from django.conf.urls import url
 
 urlpatterns = [
     url(r'^api/iteration', views.api_iteration, name='api-iteration'),
+    url(r'^api/volatility', views.api_iteration, name='api-volatilily'),
+    url(r'^api/risk', views.api_iteration, name='api-risk'),
 ]
