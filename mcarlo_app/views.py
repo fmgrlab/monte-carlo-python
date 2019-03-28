@@ -3,8 +3,8 @@ import matplotlib
 matplotlib.use("Agg")
 from django.http import JsonResponse
 from django.shortcuts import render
-from monte_carlo.domain import  *
-from monte_carlo.engine import Engine
+from mcarlo_app.domain import  *
+from mcarlo_app.engine import Engine
 
 
 def home(request):
