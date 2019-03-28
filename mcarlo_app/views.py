@@ -6,6 +6,20 @@ from django.shortcuts import render
 from mcarlo_app.domain import  *
 from mcarlo_app.engine import Engine
 
+
+def home(request):
+    return render(request,'index.html')
+
+def demo_iteration(request):
+    return render(request,'mcarlo_iteration.html')
+
+def demo_risk(request):
+    return render(request,'mcarlo_risk.html')
+
+def demo_volatility(request):
+    return render(request,'mcarlo_volatility.html')
+
+
 def api_iteration(request):
     param = parse_param(request)
     output = OutPut()
