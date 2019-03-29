@@ -31,7 +31,7 @@ def api_iteration(request):
     market_price = engine.compute_market_path(100,number_of_iterations,rand)
     b = 5.0
     strike = 100
-    stock_price = engine.compute_stock_path(volatilties, market_price, number_of_iterations,strike,b,rand)
+    stock_price = engine.compute_stock_path(volatilties, market_price, number_of_iterations,strike,b,rand, 'sto')
     output.stock_price = stock_price
     return JsonResponse(output.as_json())
 

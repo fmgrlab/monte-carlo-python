@@ -6,52 +6,56 @@ class Engine:
          self.param = param
          self.matrix_correlation = self.generate_covariance()
 
-    def compute_stock_volatility_path(self, cho_matrix):
-         volatilities = []
-         v_temp = []
-         volatilities.append(self.param.volatility_initial)
-         v_temp[0] = self.param.volatility_initial
+    def compute_stock_volatility_path(self, number_iterations, rand):
+         volatilities = np.zeros((self.param.number_of_step + 1, number_iterations), dtype=np.float)
+         volatilities[0] = self.param.volatility_initial
+         v_p = np.zeros_like(volatilities)
+         v_p[0] = volatilities[0]
+         sdt = math.sqrt(self.param.dt)
          for t in range(1, self.param.number_of_step + 1):
-           ran = np.dot(cho_matrix, self.rand[:, t])
+           ran = np.dot(self.matrix_correlation, rand[:, t])
            kappa = self.param.volatility_speed
            theta = self.param.volatility_long
            sigma = self.param.volatility_sigma
-           v_temp[t] = (v_temp[t - 1] + kappa *(theta - max(0, v_temp[t - 1])) * self.param.dt +np.sqrt (max(0, v_temp[t - 1]) ) *sigma * self.rand_vol * math.sqrt(self.param.dt))
-           volatilities.append(max(0, v_temp[t]))
+           v_p[t] = (v_p[t - 1] + kappa *(theta - np.maximum(0, v_p[t - 1])) * self.param.dt + np.sqrt(np.maximum(0, v_p[t - 1]) ) *sigma * ran[1] * sdt)
+           volatilities[t]= np.maximum(0, v_p[t])
          return volatilities
 
     def compute_constant_volatility_path(self):
         volatilities = []
-        for i in range(0, self.param.number_of_step):
+        for i in range(0, self.param.number_of_step+1):
             volatilities.append(self.param.volatility_initial)
         return volatilities
 
-    def compute_stock_path(self, volatilities, market_prices,number_iterations, strike, risk_aversion, rand):
+    def compute_stock_path(self, volatilities, market_prices,number_iterations, strike, risk_aversion, rand, constant):
         initial_stock = self.param.stock_initial
         stock_price = np.zeros((self.param.number_of_step+1,number_iterations), dtype=np.float)
         stock_price[0] = initial_stock
         for i in range(1, self.param.number_of_step + 1):
             ran = np.dot(self.matrix_correlation, rand[:, i])
-            stock_price[i] = stock_price[i-1]* (1 + self.param.stock_return * self.param.dt + np.sqrt(volatilities[i - 1]) * ran[0]* math.sqrt(self.param.dt))
-        market_returns = market_prices[self.param.number_of_step -1][:] / market_prices[0][:] - 1
+            if constant =='constant':
+                stock_price[i] = stock_price[ i - 1]* (1 + self.param.stock_return * self.param.dt + np.sqrt(self.param.volatility_initial) * ran[0]* math.sqrt(self.param.dt))
+            else :
+                stock_price[i] = stock_price[i - 1] * ( 1 + self.param.stock_return * self.param.dt + np.sqrt(volatilities[i - 1]) * ran[0] * math.sqrt(self.param.dt))
+
+        market_returns = market_prices[self.param.number_of_step][:] / market_prices[0][:] - 1
         payoff_temp = np.maximum(stock_price[-1] - strike, 0) / (1 + market_returns) ** risk_aversion
         r_mi = (1 + market_returns) ** (1 - risk_aversion)
         cn = np.sum(payoff_temp) / np.sum(r_mi)
         return cn
 
-    def compute_market_path(self, M0,number_iterations, rand):
+    def compute_market_path(self, initial_market,number_iterations, rand):
         sdt = math.sqrt(self.param.dt)
-        market_price = []
-        previous_value = M0
+        market_price =  np.zeros((self.param.number_of_step+1,number_iterations), dtype=np.float)
+        market_price[0]= initial_market
         for i in range(1, self.param.number_of_step + 1):
             ran = np.dot(self.matrix_correlation, rand[:, i])
-            current_value = previous_value * (1 +self.param.market_return * self.param.dt + self.param.market_volatility * ran[2] * sdt)
-            market_price.append(current_value)
-            previous_value = current_value
+            market_price[i] =  market_price[i-1] * (1 +self.param.market_return * self.param.dt + self.param.market_volatility * ran[2] * sdt)
         return market_price
 
     def generate_random_by_step(self, number_iterations):
-        return np.random.standard_normal((3, self.param.number_of_step + 1, number_iterations))
+        rand =  np.random.standard_normal((3, self.param.number_of_step + 1, number_iterations))
+        return (rand)
 
     def generate_covariance(self):
         covariance_matrix = np.zeros((3, 3))
