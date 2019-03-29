@@ -25,9 +25,13 @@ def api_iteration(request):
     output = OutPut()
     output.param = param
     engine = Engine(param=param)
+    number_of_iterations = 100000
+    rand = engine.generate_random_by_step(number_of_iterations)
     volatilties = engine.compute_constant_volatility_path()
-    number_of_iterations = 1
-    stock_price = engine.compute_stock_path(volatilties, number_of_iterations)
+    market_price = engine.compute_market_path(100,number_of_iterations,rand)
+    b = 5.0
+    strike = 100
+    stock_price = engine.compute_stock_path(volatilties, market_price, number_of_iterations,strike,b,rand)
     output.stock_price = stock_price
     return JsonResponse(output.as_json())
 
@@ -70,7 +74,7 @@ def parse_param(request):
     param.volatility_sigma = float(request.GET.get('volatility_sigma', 0.05))
 
     param.maturity = int(request.GET.get('maturity', 1))
-    param.number_of_step = int(request.GET.get('number_of_step', 1))
+    param.number_of_step = int(request.GET.get('number_of_step', 250))
     param.correlation_stock_market = float(request.GET.get('correlation_stock_market', 0.5))
     param.correlation_stock_volatility = float(request.GET.get('correlation_stock_volatility', -0.5))
 

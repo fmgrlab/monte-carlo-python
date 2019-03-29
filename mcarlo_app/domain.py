@@ -75,7 +75,7 @@ class OutPut:
         dict = OrderedDict()
         dict['input'] = self.param.as_json()
         dict['payoffs'] = [ob.as_json() for ob in self.payoffs]
-        dict['stock_price'] = [str(ob) for ob in self.stock_price]
+        dict['stock_price'] = self.stock_price
         return dict
 
 
