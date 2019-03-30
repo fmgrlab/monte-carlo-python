@@ -42,29 +42,41 @@ class Param:
         return dict
 
 
+
+class Option:
+
+    def __init__(self):
+        self.price = 0
+        self.std_error = 0
+        self.confidence_up =0
+        self.confidence_down = 0
+
+    def as_json(self):
+        dict = OrderedDict()
+        dict['price'] = self.price
+        dict['std_error'] = self.std_error
+        dict['confidence_up'] = self.confidence_up
+        dict['confidence_down'] = self.confidence_down
+        return dict
+
+
 #Rename to price
 class Payoff:
 
     def __init__(self):
         self.strike= 0
         self.iteration = 0
-        self.price = 0
-        self.type = 0
-        self.std_error = 0
-        self.confidence_up =0
-        self.confidence_down = 0
         self.risk_aversion = 0
+        self.put = None
+        self.call = None
 
     def as_json(self):
         dict = OrderedDict()
         dict['strike'] = self.strike
         dict['risk_aversion'] = self.risk_aversion
         dict['iteration'] = self.iteration
-        dict['type'] = 'call' if self.type == 0 else 'put'
-        dict['price'] = self.price
-        dict['std_error'] = self.std_error
-        dict['confidence_up'] = self.confidence_up
-        dict['confidence_down'] = self.confidence_down
+        dict['put'] = self.put.as_json()
+        dict['call'] = self.call.as_json()
         return dict
 
 
