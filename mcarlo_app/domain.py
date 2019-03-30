@@ -49,7 +49,7 @@ class Payoff:
         self.strike= 0
         self.iteration_number = 0
         self.price = 0
-        self.type = 1
+        self.type = 0
         self.std_error = 0
         self.confidence_up =0
         self.confidence_down = 0
@@ -58,6 +58,7 @@ class Payoff:
         dict = OrderedDict()
         dict['strike'] = self.strike
         dict['iteration'] = self.iteration_number
+        dict['type'] = 'call' if self.type == 0 else 'put'
         dict['price'] = self.price
         dict['std_error'] = self.std_error
         dict['confidence_up'] = self.confidence_up
@@ -75,7 +76,6 @@ class OutPut:
         dict = OrderedDict()
         dict['input'] = self.param.as_json()
         dict['payoffs'] = [ob.as_json() for ob in self.payoffs]
-        dict['stock_price'] = self.stock_price
         return dict
 
 

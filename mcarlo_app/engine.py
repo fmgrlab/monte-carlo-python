@@ -5,6 +5,7 @@ class Engine:
     def __init__(self, param):
          self.param = param
          self.matrix_correlation = self.generate_covariance()
+         self.market_price_initial = 100
 
     def compute_stock_volatility_path(self, number_iterations, rand):
          volatilities = np.zeros((self.param.number_of_step + 1, number_iterations), dtype=np.float)
@@ -20,12 +21,6 @@ class Engine:
            v_p[t] = (v_p[t - 1] + kappa *(theta - np.maximum(0, v_p[t - 1])) * self.param.dt + np.sqrt(np.maximum(0, v_p[t - 1]) ) *sigma * ran[1] * sdt)
            volatilities[t]= np.maximum(0, v_p[t])
          return volatilities
-
-    def compute_constant_volatility_path(self):
-        volatilities = []
-        for i in range(0, self.param.number_of_step+1):
-            volatilities.append(self.param.volatility_initial)
-        return volatilities
 
     def compute_stock_path(self, volatilities, market_prices,number_iterations, strike, risk_aversion, rand, constant):
         initial_stock = self.param.stock_initial
@@ -44,10 +39,10 @@ class Engine:
         cn = np.sum(payoff_temp) / np.sum(r_mi)
         return cn
 
-    def compute_market_path(self, initial_market,number_iterations, rand):
+    def compute_market_path(self,number_iterations, rand):
         sdt = math.sqrt(self.param.dt)
         market_price =  np.zeros((self.param.number_of_step+1,number_iterations), dtype=np.float)
-        market_price[0]= initial_market
+        market_price[0]= self.market_price_initial
         for i in range(1, self.param.number_of_step + 1):
             ran = np.dot(self.matrix_correlation, rand[:, i])
             market_price[i] =  market_price[i-1] * (1 +self.param.market_return * self.param.dt + self.param.market_volatility * ran[2] * sdt)
