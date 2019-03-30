@@ -25,7 +25,7 @@ def api_iteration(request):
     param = parse_param(request)
     output = OutPut(param)
     engine = Engine(param=param)
-    number_of_iterations = [1000,10000]
+    number_of_iterations = [1000,10000,100000]
     strike = 100
     for iteration in number_of_iterations:
         rand = engine.generate_random_by_step(iteration)

@@ -59,6 +59,7 @@ class Engine:
             ran = np.dot(self.matrix_correlation, rand[:, i])
             stock_price[i] = stock_price[i - 1] * ( 1 + self.param.stock_return * self.param.dt + np.sqrt(volatility[i - 1]) * ran[0] * math.sqrt(self.param.dt))
         payoff = Payoff()
+        payoff.iteration = number_iterations
         payoff.strike = strike
         payoff.risk_aversion = risk_aversion
         payoff.call = self.calculate_call_price(risk_aversion,market_prices,strike,stock_price)
