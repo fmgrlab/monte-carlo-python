@@ -89,5 +89,6 @@ def parse_param(request):
     param.correlation_stock_volatility = float(request.GET.get('correlation_stock_volatility', -0.5))
 
     param.b = request.GET.get('b', 5)
+    param.dt = float(param.maturity)/ float(param.number_of_step)
 
     return param
