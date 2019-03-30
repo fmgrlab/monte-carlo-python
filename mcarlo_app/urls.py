@@ -25,6 +25,6 @@ urlpatterns = [
     path('demo/risk', views.demo_risk, name='demo-risk'),
 
     path('api/iteration', views.api_iteration, name='api-iteration'),
-    path('api/volatility', views.api_iteration, name='api-volatilily'),
-    path('api/risk', views.api_iteration, name='api-risk'),
+    path('api/volatility', views.api_volatility, name='api-volatilily'),
+    path('api/risk', views.api_risk, name='api-risk'),
 ]

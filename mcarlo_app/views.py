@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from mcarlo_app.domain import  *
 from mcarlo_app.engine import Engine
+import  numpy as np
 
 
 def home(request):
@@ -22,47 +23,50 @@ def demo_volatility(request):
 
 def api_iteration(request):
     param = parse_param(request)
-    output = OutPut()
-    output.param = param
+    output = OutPut(param)
     engine = Engine(param=param)
-    number_of_iterations = [1,10,100,1000]
+    number_of_iterations = [1000,10000]
     strike = 100
     for iteration in number_of_iterations:
         rand = engine.generate_random_by_step(iteration)
         volatility = engine.compute_stock_volatility_path(iteration,rand)
         market_price = engine.compute_market_path(iteration,rand)
-        stock_price = engine.compute_stock_path(volatility, market_price, iteration,strike,param.b,rand, 'sto')
-        payoff = Payoff()
-        payoff.strike = strike
-        payoff.type = 'call'
-        payoff.price = stock_price
-        payoff.confidence_down = 0
-        payoff.std_error = 0.12
+        payoff = engine.compute_stock_path(volatility, market_price, iteration,strike,param.b,rand)
         output.payoffs.append(payoff)
     return JsonResponse(output.as_json())
 
 
 def api_volatility(request):
     param = parse_param(request)
-    output = OutPut()
-    output.param = param
+    output = OutPutVolatility(param)
     engine = Engine(param=param)
-    volatilties = engine.compute_constant_volatility_path()
-    number_of_iterations = 100000
-    stock_price = engine.compute_stock_path(volatilties, number_of_iterations)
-    output.stock_price = stock_price
+    number_of_iterations = [1000,10000]
+    strike = 100
+    for iteration in number_of_iterations:
+        rand = engine.generate_random_by_step(iteration)
+        market_price = engine.compute_market_path(iteration, rand)
+        volatility = engine.compute_stock_volatility_path(iteration, rand)
+        payoff = engine.compute_stock_path(volatility, market_price, iteration, strike, param.b, rand)
+        volatility_constant = engine.compute_constant_volatility_path()
+        payoff2 = engine.compute_stock_path(volatility_constant, market_price, iteration, strike, param.b, rand)
+        output.payoffs.append(payoff)
+        output.payoffs_constant.append(payoff2)
     return JsonResponse(output.as_json())
 
 
 def api_risk(request):
     param = parse_param(request)
-    output = OutPut()
-    output.param = param
+    output = OutPut(param)
     engine = Engine(param=param)
-    volatilties = engine.compute_constant_volatility_path()
-    number_of_iterations = 100000
-    stock_price = engine.compute_stock_path(volatilties, number_of_iterations)
-    output.stock_price = stock_price
+    iteration = 100000
+    strike = 100
+    risk_aversions =  [1,2,3,4,5,6,7,8,9,10]
+    for b in risk_aversions:
+        rand = engine.generate_random_by_step(iteration)
+        volatility = engine.compute_stock_volatility_path(iteration, rand)
+        market_price = engine.compute_market_path(iteration, rand)
+        payoff = engine.compute_stock_path(volatility, market_price, iteration, strike, b, rand)
+        output.payoffs.append(payoff)
     return JsonResponse(output.as_json())
 
 

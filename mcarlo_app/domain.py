@@ -47,17 +47,19 @@ class Payoff:
 
     def __init__(self):
         self.strike= 0
-        self.iteration_number = 0
+        self.iteration = 0
         self.price = 0
         self.type = 0
         self.std_error = 0
         self.confidence_up =0
         self.confidence_down = 0
+        self.risk_aversion = 0
 
     def as_json(self):
         dict = OrderedDict()
         dict['strike'] = self.strike
-        dict['iteration'] = self.iteration_number
+        dict['risk_aversion'] = self.risk_aversion
+        dict['iteration'] = self.iteration
         dict['type'] = 'call' if self.type == 0 else 'put'
         dict['price'] = self.price
         dict['std_error'] = self.std_error
@@ -67,8 +69,8 @@ class Payoff:
 
 
 class OutPut:
-    def __init__(self):
-        self.param = Param()
+    def __init__(self, param):
+        self.param = param
         self.payoffs = []
         self.stock_price = []
 
@@ -78,5 +80,16 @@ class OutPut:
         dict['payoffs'] = [ob.as_json() for ob in self.payoffs]
         return dict
 
+class OutPutVolatility(OutPut):
+    def __init__(self,param):
+        self.param = param
+        self.payoffs = []
+        self.payoffs_constant = []
 
+    def as_json(self):
+        dict = OrderedDict()
+        dict['input'] = self.param.as_json()
+        dict['payoffs'] = [ob.as_json() for ob in self.payoffs]
+        dict['payoffs_vol_constant'] = [ob.as_json() for ob in self.payoffs_constant]
+        return dict
 
