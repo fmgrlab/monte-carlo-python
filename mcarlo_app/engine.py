@@ -51,6 +51,13 @@ class Engine:
         option.std_error = 0.12
         return option
 
+    def calculate_payoff(self, iteration,strike,b):
+        rand = self.generate_random_by_step(iteration)
+        volatility = self.compute_stock_volatility_path(iteration, rand)
+        market_price = self.compute_market_path(iteration, rand)
+        payoff = self.compute_stock_path(volatility, market_price, iteration, strike, b, rand)
+        return  payoff
+
     def compute_stock_path(self, volatility, market_prices,number_iterations, strike, risk_aversion, rand):
         initial_stock = self.param.stock_initial
         stock_price = np.zeros((self.param.number_of_step + 1, number_iterations), dtype=np.float)
