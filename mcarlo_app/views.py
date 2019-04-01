@@ -9,6 +9,8 @@ from django.http import JsonResponse
 from django.shortcuts import render
 import mpld3
 from pylab import *
+from collections import defaultdict
+
 
 def home(request):
     return render(request,'index.html')
@@ -110,18 +112,35 @@ def parse_param(request):
 
 def draw_data(payoffs):
     fig, ax = plt.subplots(sharex=True)
-    xvals = []
-    yvals = []
-    bound_up = []
-    bound_down = []
+    xvals = list()
+    yvals_strike_80 = defaultdict(list)
+    yvals_strike_100 = defaultdict(list)
+    yvals_strike_120 = defaultdict(list)
+
     for item in payoffs:
-        if item.strike < 100:
+        if item.strike == 80:
             xvals.append(item.iteration)
-            yvals.append(item.call.price)
-            bound_up.append(item.call.price + 5)
-            bound_down.append(item.call.price -  5)
-    l,= ax.plot(xvals, yvals)
-    ax.fill_between(xvals, bound_up,bound_down,color=l.get_color(), alpha=.2)
+            yvals_strike_80['price'].append(item.call.price)
+            yvals_strike_80['bound_up'].append(item.call.price + 2)
+            yvals_strike_80['bound_down'].append(item.call.price -  2)
+        if item.strike == 100:
+            yvals_strike_100['price'].append(item.call.price)
+            yvals_strike_100['bound_up'].append(item.call.price + 2)
+            yvals_strike_100['bound_down'].append(item.call.price -  2)
+        if item.strike == 120:
+            yvals_strike_120['price'].append(item.call.price)
+            yvals_strike_120['bound_up'].append(item.call.price + 2)
+            yvals_strike_120['bound_down'].append(item.call.price -  2)
+    print(xvals)
+    l1,= ax.plot(xvals, yvals_strike_80['price'],label='Strike = 80')
+    ax.fill_between(xvals, yvals_strike_80['bound_down'],yvals_strike_80['bound_up'],color=l1.get_color(), alpha=.2)
+
+    l2, = ax.plot(xvals, yvals_strike_100['price'])
+    ax.fill_between(xvals, yvals_strike_100['bound_down'], yvals_strike_100['bound_up'], color=l2.get_color(), alpha=.2)
+
+    l3, = ax.plot(xvals, yvals_strike_120['price'])
+    ax.fill_between(xvals, yvals_strike_120['bound_down'], yvals_strike_120['bound_up'], color=l3.get_color(), alpha=.2)
+    ax.legend([l1, l2,l3], ["Strike = 80", "Strike = 100","Strike = 120"])
     ax.set_ylim(0, 50)
     ax.set_xlabel('Iteration')
     ax.set_ylabel('Payoffs')
