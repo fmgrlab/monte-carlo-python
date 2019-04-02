@@ -17,6 +17,8 @@ def home(request):
 
 def demo_iteration(request):
     param = parse_param(request)
+    if 'show_cvs' not in request.GET and 'show_api' not in request.GET and 'show_graph' not in request.GET:
+         return render(request, 'mcarlo_iteration.html', {'param': param})
     engine = Engine(param=param)
     payoffs = []
     strikes = param.get_strike()
@@ -57,7 +59,10 @@ def demo_iteration(request):
     if 'show_api' in request.GET:
         return JsonResponse(output.as_json())
     graph,html_fig2 = draw_data(payoffs,strikes)
-    return render(request,'mcarlo_iteration.html',{'param': param, 'output':output,'graph': graph,'call': html_fig2})
+    if 'show_graph' in request.GET:
+        return render(request,'mcarlo_iteration.html',{'param': param, 'output':output,'graph': graph,'call': html_fig2})
+
+
 
 def demo_risk(request):
     return render(request,'mcarlo_risk.html')

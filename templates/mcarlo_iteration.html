@@ -13,8 +13,15 @@
 <div class="page-header" style="margin: 1%">
     <h4>
         Effects of number of iteration on option prices.
-    </h4>
-    <br><br>
+    </h4><br>
+    <p align="justify">
+                                In the <b>Iterations</b> option, we can check how different numbers of simulation iterations can affect
+                                the option prices given by the model.
+                            </p>
+     As showed in the results, analyzing the standard errors, we find that the model
+                                has an O(&radic;<span style="text-decoration: overline">n</span>) convergence rate.
+                                Also, we can see that the standard errors decrease with increasing the iterations number.
+    <br>
 </div>
 
 <form role="form" name="computeForm" id="computeForm" method="get" action="/mcarlo/demo/iteration">
@@ -24,71 +31,68 @@
                 <div class="col-xs-1">
                     <label for="stock_initial">So</label>
                     <input class="form-control" name="stock_initial" id="stock_initial"
-                           value="{{ param.stock_initial }}">
+                           value="{{ param.stock_initial }}"  pattern="([0-9]+\.)?[0-9]+">
                 </div>
-
                 <div class="col-xs-1">
                     <label for="stock_return" lang="latex">\mu_s</label>
                     <input class="form-control" id="stock_return" name="stock_return"
-                           value="{{ param.stock_return }}">
+                           value="{{ param.stock_return }}"  pattern="([0-9]+\.)?[0-9]+">
                 </div>
                  <div class="col-xs-1">
                     <label for="market_return" lang="latex">M_0</label>
                     <input class="form-control" id="market_initial" name="market_return"
-                           value="{{ param.market_return }}">
+                           value="{{ param.market_return }}"  pattern="([0-9]+\.)?[0-9]+">
                 </div>
                 <div class="col-xs-1">
                     <label for="market_return" lang="latex">\mu_m</label>
                     <input class="form-control" id="market_return" name="market_return"
-                           value="{{ param.market_return }}">
+                           value="{{ param.market_return }}"  pattern="([0-9]+\.)?[0-9]+">
                 </div>
+                <div class="col-xs-1"></div>
                 <div class="col-xs-1">
                     <label for="volatility_speed" lang="latex">\kappa</label>
                     <input class="form-control" id="volatility_speed" name="volatility_speed"
-                           value="{{ param.volatility_speed }}">
+                           value="{{ param.volatility_speed }}"  pattern="([0-9]+\.)?[0-9]+">
                 </div>
                 <div class="col-xs-1">
                     <label for="volatility_long" lang="latex">\theta</label>
                     <input class="form-control" id="volatility_long" name="volatility_long"
-                           value="{{ param.volatility_long }}">
+                           value="{{ param.volatility_long }}"  pattern="([0-9]+\.)?[0-9]+">
                 </div>
                 <div class="col-xs-1">
                     <label for="volatility_initial" lang="latex">V_0</label>
                     <input class="form-control" id="volatility_initial" name="volatility_initial"
-                           value="{{ param.volatility_initial }}">
+                           value="{{ param.volatility_initial }}"  pattern="([0-9]+\.)?[0-9]+">
                 </div>
                 <div class="col-xs-1">
                     <label for="volatility_sigma" lang="latex">\sigma_v</label>
                     <input class="form-control" id="volatility_sigma" name="volatility_sigma"
-                           value="{{ param.volatility_sigma }}" onchange="addInput()">
+                           value="{{ param.volatility_sigma }}"  pattern="([0-9]+\.)?[0-9]+">
                 </div>
                 <div class="col-xs-1">
                     <label for="market_volatility" lang="latex">\sigma_m</label>
                     <input class="form-control" id="market_volatility" name="market_volatility"
-                           value="{{ param.market_volatility }}">
+                           value="{{ param.market_volatility }}"  pattern="([0-9]+\.)?[0-9]+">
                 </div>
                 <div class="col-xs-1">
                     <label for="correlation_stock_volatility" lang="latex">\rho_{sv}</label>
                     <input class="form-control" id="correlation_stock_volatility" name="correlation_stock_volatility"
-                           value="{{ param.correlation_stock_volatility }}" pattern="([0-9]+\.)?[0-9]+">
+                           value="{{ param.correlation_stock_volatility }}" pattern="(^-?[0-9]+\.)?[0-9]+">
                 </div>
                 <div class="col-xs-1">
                     <label for="correlation_stock_market" lang="latex">\rho_{sm}</label>
                     <input class="form-control" id="correlation_stock_market" name="correlation_stock_market"
-                           value="{{ param.correlation_stock_market }}">
+                           value="{{ param.correlation_stock_market }}"  pattern="(^-?[0-9]+\.)?[0-9]+">
                 </div>
-
             </div>
         </div>
         <div class="row" style="margin:1%">
             <div class="form-group row">
-                <div class="col-xs-1"></div>
                 <div class="col-xs-2">
                     <label for="maturity">Maturity</label>
                     <input class="form-control" id="maturity" name="maturity"
                            value="{{ param.maturity }}">
                 </div>
-
                 <div class="col-xs-2">
                     <label for="step_number">Number of step</label>
                     <input class="form-control" id="step_number" name="step_number"
@@ -104,17 +108,15 @@
                     <input class="form-control" id="strike" name="strike"
                            value="{{ param.strike }}">
                 </div>
-
                  <div class="col-xs-2">
                     <label for="iterations">Iterations</label>
                     <input class="form-control" id="iterations" name="iterations"
                            value="{{ param.iterations }}">
                 </div>
                  <div class="col-xs-1"></div>
-
             </div>
-            <br>
-            <div class="row" style="margin:1%">
+        </div>
+        <div class="row">
                 <div class="col-md-4">
                     <input type="submit" class="btn btn-block  btn-primary" id="show_graph" value="Show Graph"
                            name="show_graph"/>
@@ -129,12 +131,11 @@
                 </div>
             </div>
             <div lang="latex">
-
             </div>
-        </div>
+    </div>
 </form>
 
-
+{% if output %}
 <div class="row" style="border: 1px solid #8c8c8c;margin:1%">
 
     <div class="col-md-6">
@@ -209,7 +210,7 @@
 
 
 </div>
-
+{% endif %}
 
 {% endblock %}
 
