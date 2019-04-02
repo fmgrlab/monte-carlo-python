@@ -1,6 +1,6 @@
 {% extends "home.html" %}
 
- {% block header %}
+{% block header %}
 <li>
     <a href="volatility">By volatility</a>
 </li>
@@ -10,180 +10,205 @@
 {% endblock %}
 
 {% block content %}
- <div class="page-header" style="margin: 1%">
-                <h4>
-                    Effects of number of iteration on option prices.
-                </h4>
-                  <br><br>
+<div class="page-header" style="margin: 1%">
+    <h4>
+        Effects of number of iteration on option prices.
+    </h4>
+    <br><br>
 </div>
 
- <form role="form" name="computeForm" id="computeForm" method="post" action="/mcarlo/demo/iteration">
-            {% csrf_token %}
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group row">
-
-                                <div class="col-xs-1">
-                                    <label for="stock_initial">So</label>
-                                    <input class="form-control" name="stock_initial" id = "stock_initial" value="{{ param.stock_initial }}">
-                                </div>
-
-                                <div class="col-xs-1">
-                                    <label for="maturity">Maturity</label>
-                                    <input class="form-control" id="maturity" name="maturity"
-                                           value="{{ param.maturity }}">
-                                </div>
-                                  <div class="col-xs-1">
-                                    <label for="step_number">N</label>
-                                    <input class="form-control" id="step_number" name="step_number"
-                                           value="{{ param.number_of_step }}">
-                                </div>
-                                <div class="col-xs-1">
-                                    <label for="stock_return" lang="latex">\mu_s</label>
-                                    <input class="form-control" id="stock_return" name="stock_return"
-                                           value="{{ param.stock_return }}">
-                                </div>
-                                 <div class="col-xs-1">
-                                    <label for="market_return" lang="latex">\mu_m</label>
-                                    <input class="form-control" id="market_return" name="market_return"
-                                           value="{{ param.market_return }}">
-                                </div>
-                                 <div class="col-xs-1">
-                                    <label for="volatility_speed" lang="latex">\kappa</label>
-                                    <input class="form-control" id="volatility_speed" name="volatility_speed"
-                                           value="{{ param.volatility_speed }}">
-                                </div>
-                                 <div class="col-xs-1">
-                                    <label for="volatility_long" lang="latex">\theta</label>
-                                    <input class="form-control" id="volatility_long" name="volatility_long"
-                                           value="{{ param.volatility_long }}">
-                                </div>
-                                 <div class="col-xs-1">
-                                    <label for="volatility_initial" lang="latex" >V_0</label>
-                                    <input class="form-control" id="volatility_initial" name="volatility_initial"
-                                           value="{{ param.volatility_initial }}">
-                                </div>
-                                 <div class="col-xs-1">
-                                    <label for="volatility_sigma"  lang="latex">\sigma_v</label>
-                                    <input class="form-control" id="volatility_sigma" name="volatility_sigma"
-                                           value="{{ param.volatility_sigma }}" onchange="addInput()">
-                                </div>
-                                <div class="col-xs-1">
-                                    <label for="market_volatility"  lang="latex">\sigma_m</label>
-                                    <input class="form-control" id="market_volatility" name="market_volatility"
-                                           value="{{ param.market_volatility }}">
-                                </div>
-                                <div class="col-xs-1">
-                                    <label for="maturity">b</label>
-                                    <input class="form-control" id="b" name="b"
-                                           value="{{ param.b }}" onchange="addInput()"  pattern="([0-9]+\.)?[0-9]+" >
-                                </div>
-                                 <div class="col-xs-1">
-                                    <label for="correlation_stock_volatility" lang="latex">\rho_{sv}</label>
-                                    <input class="form-control" id="correlation_stock_volatility" name="correlation_stock_volatility"
-                                           value="{{ param.correlation_stock_volatility }}"  pattern="([0-9]+\.)?[0-9]+" >
-                                </div>
-                                <div class="col-xs-1">
-                                    <label for="correlation_stock_market" lang="latex">\rho_{sm}</label>
-                                    <input class="form-control" id="correlation_stock_market" name="correlation_stock_market"
-                                           value="{{ param.correlation_stock_market }}">
-                                </div>
-
-                            </div>
-
-                        </div>
-
-
-                    </div>
-                    <div class="row" style="margin: 20px">
-                        <div class="col-md-4">
-                            <input type="submit" class="btn btn-block  btn-primary" id="show_graph" value="Show Graph" name="show_graph"/>
-                        </div>
-                          <div class="col-md-4">
-                            <input type="submit" class="btn btn-block  btn-primary" id="show_api" value="Show API in Json" name="show_api"/>
-                        </div>
-                          <div class="col-md-4">
-                            <input type="submit" class="btn btn-block  btn-primary" id="show_cvs" value="Download in format csv" name="show_cvs"/>
-                        </div>
-                    </div>
-                    <div lang="latex">
-
-</div>
+<form role="form" name="computeForm" id="computeForm" method="get" action="/mcarlo/demo/iteration">
+    <div class="container-fluid">
+        <div class="row" style="margin:1%">
+            <div class="form-group row">
+                <div class="col-xs-1">
+                    <label for="stock_initial">So</label>
+                    <input class="form-control" name="stock_initial" id="stock_initial"
+                           value="{{ param.stock_initial }}">
                 </div>
-            </form>
+
+                <div class="col-xs-1">
+                    <label for="stock_return" lang="latex">\mu_s</label>
+                    <input class="form-control" id="stock_return" name="stock_return"
+                           value="{{ param.stock_return }}">
+                </div>
+                 <div class="col-xs-1">
+                    <label for="market_return" lang="latex">M_0</label>
+                    <input class="form-control" id="market_initial" name="market_return"
+                           value="{{ param.market_return }}">
+                </div>
+                <div class="col-xs-1">
+                    <label for="market_return" lang="latex">\mu_m</label>
+                    <input class="form-control" id="market_return" name="market_return"
+                           value="{{ param.market_return }}">
+                </div>
+                <div class="col-xs-1">
+                    <label for="volatility_speed" lang="latex">\kappa</label>
+                    <input class="form-control" id="volatility_speed" name="volatility_speed"
+                           value="{{ param.volatility_speed }}">
+                </div>
+                <div class="col-xs-1">
+                    <label for="volatility_long" lang="latex">\theta</label>
+                    <input class="form-control" id="volatility_long" name="volatility_long"
+                           value="{{ param.volatility_long }}">
+                </div>
+                <div class="col-xs-1">
+                    <label for="volatility_initial" lang="latex">V_0</label>
+                    <input class="form-control" id="volatility_initial" name="volatility_initial"
+                           value="{{ param.volatility_initial }}">
+                </div>
+                <div class="col-xs-1">
+                    <label for="volatility_sigma" lang="latex">\sigma_v</label>
+                    <input class="form-control" id="volatility_sigma" name="volatility_sigma"
+                           value="{{ param.volatility_sigma }}" onchange="addInput()">
+                </div>
+                <div class="col-xs-1">
+                    <label for="market_volatility" lang="latex">\sigma_m</label>
+                    <input class="form-control" id="market_volatility" name="market_volatility"
+                           value="{{ param.market_volatility }}">
+                </div>
+                <div class="col-xs-1">
+                    <label for="correlation_stock_volatility" lang="latex">\rho_{sv}</label>
+                    <input class="form-control" id="correlation_stock_volatility" name="correlation_stock_volatility"
+                           value="{{ param.correlation_stock_volatility }}" pattern="([0-9]+\.)?[0-9]+">
+                </div>
+                <div class="col-xs-1">
+                    <label for="correlation_stock_market" lang="latex">\rho_{sm}</label>
+                    <input class="form-control" id="correlation_stock_market" name="correlation_stock_market"
+                           value="{{ param.correlation_stock_market }}">
+                </div>
+
+            </div>
+        </div>
+        <div class="row" style="margin:1%">
+            <div class="form-group row">
+                <div class="col-xs-1"></div>
+                <div class="col-xs-2">
+                    <label for="maturity">Maturity</label>
+                    <input class="form-control" id="maturity" name="maturity"
+                           value="{{ param.maturity }}">
+                </div>
+
+                <div class="col-xs-2">
+                    <label for="step_number">Number of step</label>
+                    <input class="form-control" id="step_number" name="step_number"
+                           value="{{ param.number_of_step }}">
+                </div>
+                 <div class="col-xs-2">
+                    <label for="maturity">Risk Aversion</label>
+                    <input class="form-control" id="risk_aversion" name="risk_aversion"
+                           value="{{ param.risk_aversion }}" pattern="([0-9]+\.)?[0-9]+">
+                </div>
+                <div class="col-xs-2">
+                    <label for="strike">Strike</label>
+                    <input class="form-control" id="strike" name="strike"
+                           value="{{ param.strike }}">
+                </div>
+
+                 <div class="col-xs-2">
+                    <label for="iterations">Iterations</label>
+                    <input class="form-control" id="iterations" name="iterations"
+                           value="{{ param.iterations }}">
+                </div>
+                 <div class="col-xs-1"></div>
+
+            </div>
+            <br>
+            <div class="row" style="margin:1%">
+                <div class="col-md-4">
+                    <input type="submit" class="btn btn-block  btn-primary" id="show_graph" value="Show Graph"
+                           name="show_graph"/>
+                </div>
+                <div class="col-md-4">
+                    <input type="submit" class="btn btn-block  btn-primary" id="show_api" value="Show API in Json"
+                           name="show_api"/>
+                </div>
+                <div class="col-md-4">
+                    <input type="submit" class="btn btn-block  btn-primary" id="show_cvs" value="Download in format csv"
+                           name="show_cvs"/>
+                </div>
+            </div>
+            <div lang="latex">
+
+            </div>
+        </div>
+</form>
 
 
-<div class="row" style=" margin: 1%; padding: 10px;border: 1px solid #8c8c8c;min-height: 15cm;overflow-x: scroll">
+<div class="row" style="border: 1px solid #8c8c8c;margin:1%">
 
-        <div style="display: flex; justify-content: center;">{{ graph|safe }}</div>
-
+    <div class="col-md-6">
+        <h5>Call</h5>
+        <div>{{ call|safe }}</div>
     </div>
+    <div class="col-md-6">
+        <h5>Put</h5>
+        <div>{{ graph|safe }}</div>
+    </div>
+</div>
 
-    <div class="row" style=" margin: 1%; padding: 1px;overflow-y: scroll;min-height: 15cm">
+<div class="row" style="margin:1%">
 
-        <table cellpadding="5" class="table table-bordered table-hover table-condensed">
-             <thead>
-             <tr>
-            <th></th>
-            <th></th>
+    <table cellpadding="5" class="table table-bordered table-hover table-condensed">
+        <thead>
+        <tr>
+            <th colspan="2"></th>
             <th colspan="4" style="border-bottom-color:red;text-align:center">Option Call</th>
             <th colspan="4" style="border-bottom-color:#3531ff;text-align:center">Option Put</th>
-             </tr>
-              <tr>
+        </tr>
+        <tr>
             <th>Strike</th>
-            <th>Number of simulation</th>
+            <th>Iteration</th>
             <th>Price</th>
-            <th>Standard Error</th>
-            <th>confidence up</th>
-            <th>confidence Down</th>
+            <th>Std</th>
+            <th>Conf up</th>
+            <th>Conf Down</th>
             <th>Price</th>
-            <th>Standard Error</th>
-            <th>confidence up</th>
-            <th>confidence Down</th>
-             </tr>
-            </thead>
-            <tbody>
-                {% for item in output.payoffs  %}
-                            <tr>
-                                <td>
-                                    {{ item.strike  }}
-                                </td>
-                                <td>
-                                    {{ item.iteration|floatformat:4}}
-                                </td>
-                                <td>
-                                    {{ item.call.price|floatformat:4 }}
-                                </td>
-                                 <td>
-                                    {{ item.call.std_error|floatformat:4 }}
-                                </td>
-                                 <td>
-                                    {{ item.call.confidence_up|floatformat:4 }}
-                                </td>
-                                 <td>
-                                    {{ item.call.confidence_down|floatformat:4 }}
-                                </td>
-                                 <td style="border-left-color:#3531ff">
-                                    {{ item.put.price|floatformat:4 }}
-                                </td>
-                                 <td>
-                                    {{ item.put.std_error|floatformat:4 }}
-                                </td>
-                                 <td>
-                                    {{ item.put.confidence_up|floatformat:4 }}
-                                </td>
-                                 <td>
-                                    {{ item.put.confidence_down|floatformat:4 }}
-                                </td>
-                            </tr>
-                {% endfor %}
+            <th>Std Error</th>
+            <th>Conf Up</th>
+            <th>Conf Down</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in output.payoffs %}
+        <tr>
+            <td>
+                {{ item.strike }}
+            </td>
+            <td>
+                {{ item.iteration}}
+            </td>
+            <td>
+                {{ item.call.price|floatformat:4 }}
+            </td>
+            <td>
+                {{ item.call.std_error|floatformat:4 }}
+            </td>
+            <td>
+                {{ item.call.confidence_up|floatformat:4 }}
+            </td>
+            <td>
+                {{ item.call.confidence_down|floatformat:4 }}
+            </td>
+            <td style="border-left-color:#3531ff">
+                {{ item.put.price|floatformat:4 }}
+            </td>
+            <td>
+                {{ item.put.std_error|floatformat:4 }}
+            </td>
+            <td>
+                {{ item.put.confidence_up|floatformat:4 }}
+            </td>
+            <td>
+                {{ item.put.confidence_down|floatformat:4 }}
+            </td>
+        </tr>
+        {% endfor %}
 
-        </table>
+    </table>
 
 
-    </div>
-
+</div>
 
 
 {% endblock %}

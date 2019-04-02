@@ -6,7 +6,6 @@ class Engine:
     def __init__(self, param):
          self.param = param
          self.matrix_correlation = self.generate_covariance()
-         self.market_price_initial = 100
 
     def compute_constant_volatility_path(self):
         volatility = []
@@ -76,7 +75,7 @@ class Engine:
     def compute_market_path(self,number_iterations, rand):
         sdt = math.sqrt(self.param.dt)
         market_price =  np.zeros((self.param.number_of_step+1,number_iterations), dtype=np.float)
-        market_price[0]= self.market_price_initial
+        market_price[0]= self.param.market_initial
         for i in range(1, self.param.number_of_step + 1):
             ran = np.dot(self.matrix_correlation, rand[:, i])
             market_price[i] =  market_price[i-1] * (1 +self.param.market_return * self.param.dt + self.param.market_volatility * ran[2] * sdt)
