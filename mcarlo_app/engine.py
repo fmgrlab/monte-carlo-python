@@ -28,26 +28,33 @@ class Engine:
            volatilities[t]= np.maximum(0, v_p[t])
          return volatilities
 
-    def calculate_call_price(self,risk_aversion,market_prices,strike,stock_price):
+    def calculate_call_price(self,risk_aversion,market_prices,strike,stock_price,iteration):
         market_returns = market_prices[self.param.number_of_step][:] / market_prices[0][:] - 1
         payoff_temp = np.maximum(stock_price[-1] - strike, 0) / (1 + market_returns) ** risk_aversion
         r_mi = (1 + market_returns) ** (1 - risk_aversion)
         cn = np.sum(payoff_temp) / np.sum(r_mi)
         option = Option()
         option.price = cn
-        option.confidence_down = 0
-        option.std_error = 0.12
+        st_dev = (1 / (np.sum(r_mi) ** 2)) * np.sum((payoff_temp - r_mi * (np.sum(payoff_temp) / np.sum(r_mi))) ** 2)
+        option.std_error = math.sqrt(st_dev) / math.sqrt(iteration)
+
+        option.confidence_down = cn - 1.96 * st_dev
+        option.confidence_up = cn + 1.96 * st_dev
+        option.price = cn
         return option
 
-    def calculate_put_price(self,risk_aversion,market_prices,strike,stock_price):
+    def calculate_put_price(self,risk_aversion,market_prices,strike,stock_price,iteration):
         market_returns = market_prices[self.param.number_of_step][:] / market_prices[0][:] - 1
         payoff_temp = np.maximum(strike -stock_price[-1], 0) / (1 + market_returns) ** risk_aversion
         r_mi = (1 + market_returns) ** (1 - risk_aversion)
         cn = np.sum(payoff_temp) / np.sum(r_mi)
         option = Option()
+        st_dev = (1 / (np.sum(r_mi) ** 2)) * np.sum((payoff_temp - r_mi * (np.sum(payoff_temp) / np.sum(r_mi))) ** 2)
+        option.std_error = math.sqrt(st_dev) / math.sqrt(iteration)
+
+        option.confidence_down = cn - 1.96 * st_dev
+        option.confidence_up = cn + 1.96 * st_dev
         option.price = cn
-        option.confidence_down = 0
-        option.std_error = 0.12
         return option
 
     def calculate_payoff(self, iteration,strike,b):
@@ -68,8 +75,9 @@ class Engine:
         payoff.iteration = number_iterations
         payoff.strike = strike
         payoff.risk_aversion = risk_aversion
-        payoff.call = self.calculate_call_price(risk_aversion,market_prices,strike,stock_price)
-        payoff.put = self.calculate_put_price(risk_aversion, market_prices, strike, stock_price)
+        payoff.call = self.calculate_call_price(risk_aversion,market_prices,strike,stock_price,number_iterations)
+        payoff.put = self.calculate_put_price(risk_aversion, market_prices, strike, stock_price,number_iterations)
+
         return payoff
 
     def compute_market_path(self,number_iterations, rand):

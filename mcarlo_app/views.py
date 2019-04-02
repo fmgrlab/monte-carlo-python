@@ -137,12 +137,12 @@ def draw_data(payoffs,strikes):
             if item.strike == strike_item:
                  xvals.append(item.iteration)
                  yvals_strike_call['price'].append(item.call.price)
-                 yvals_strike_call['bound_up'].append(item.call.price + 2)
-                 yvals_strike_call['bound_down'].append(item.call.price -  2)
+                 yvals_strike_call['bound_up'].append(item.call.confidence_up)
+                 yvals_strike_call['bound_down'].append(item.call.confidence_down)
 
                  yvals_strike_put['price'].append(item.put.price)
-                 yvals_strike_put['bound_up'].append(item.put.price + 2)
-                 yvals_strike_put['bound_down'].append(item.put.price - 2)
+                 yvals_strike_put['bound_up'].append(item.put.confidence_up)
+                 yvals_strike_put['bound_down'].append(item.put.confidence_down)
         l1, = ax.plot(xvals, yvals_strike_call['price'], label='Strike = '+str(strike_item))
         ax.fill_between(xvals, yvals_strike_call['bound_down'], yvals_strike_call['bound_up'], color=l1.get_color(),
                         alpha=.2)
