@@ -5,43 +5,75 @@
              <div class="page-header" style="margin: 5%">
                 <h4>Equilibrium option pricing: A Monte Carlo approach
                 </h4>
-                <p>
-                    The purpose of this website is to implement the interest rate model Hull White
+                <br>
+                <img src="http://www.goddardconsulting.ca/image-files/MonteCarloPaths.jpg" alt="Smiley face" align="right">
+                    <p>
+                        <br>
+                        <br>
+                        <br>
+                        This website has as purpose the implementation of the paper developed by
+                        <b>Axel Buchner</b> that presents a novel Monte Carlo method for option
+                        pricing which is based on a general equilibrium model.
+                    </p>
+                    <p>
+                        The main advantage of the method is that it does not require the specification
+                        of a market price of risk, making the method flexible for pricing in incomplete
+                        markets which is a well-known challenge in financial markets.
+                    </p>
+                    <p>
+                        The method produces a strongly consistent estimator for the
+                        option price that exhibits the same error convergence rate as the
+                        standard risk-neutral pricing Monte Carlo approach.
+                    </p>
+            <br>
+                 <br>
+                 <br>
+                 <br>
             </div>
-            <br><br>
-
 
              <div class="row" style="margin: 20px">
                         <div class="col-md-4">
-                            <p>
-                                In financial mathematics, the Hull–White model is a model of future interest rates. In its most generic formulation, it belongs to the class of no-arbitrage models that are able to fit today's term structure of interest rates. It is relatively straightforward to translate the mathematical description of the evolution of future interest rates onto a tree or lattice and so interest rate derivatives such as bermudan swaptions can be valued in the model.
-
-The first Hull–White model was described by John C. Hull and Alan White in 1990. The model is still popular in the market today.
-
+                            <p align="justify">
+                                In the <b>Iterations</b> option, we can check how different numbers of simulation iterations can affect
+                                the option prices given by the model.
                             </p>
-                                                        <br>
+                            <p align="justify">
+                                As showed in the results, analyzing the standard errors, we find that the model
+                                has an O(&radic;<span style="text-decoration: overline">n</span>) convergence rate.
+                                Also, we can see that the standard errors grow with increasing moneyness of the options.
+                            </p>
                             <br>
-                            <a class="btn btn-block  btn-primary" href="demo/iteration" role="button">Iteration</a>
+                            <br>
+                            <br>
+                            <a class="btn btn-block  btn-primary" href="demo/iteration" role="button">ITERATIONS</a>
                         </div>
                         <div class="col-md-4">
-                              <p>
-                                In financial mathematics, the Hull–White model is a model of future interest rates. In its most generic formulation, it belongs to the class of no-arbitrage models that are able to fit today's term structure of interest rates. It is relatively straightforward to translate the mathematical description of the evolution of future interest rates onto a tree or lattice and so interest rate derivatives such as bermudan swaptions can be valued in the model.
-
-The first Hull–White model was described by John C. Hull and Alan White in 1990. The model is still popular in the market today.
-
-                            </p>                            <br>
+                            <p align="justify">
+                                In the <b>Relative Risk Aversion</b> option, we can understand how different levels of
+                                relative risk aversion b on option prices.
+                            </p>
+                            <p align="justify">
+                                We concluded that, in general, increasing levels of risk aversion decreases call option prices and
+                                increase put option prices.In incomplete market structures, the relative risk aversion
+                                has an important effect on option prices.
+                            </p>
                             <br>
-                            <a class="btn btn-block  btn-primary" href="demo/risk" role="button">Risk</a>
+                            <br>
+                            <a class="btn btn-block  btn-primary" href="demo/risk" role="button">RELATIVE RISK AVERSION</a>
                         </div>
                         <div class="col-md-4">
-                              <p>
-                                In financial mathematics, the Hull–White model is a model of future interest rates. In its most generic formulation, it belongs to the class of no-arbitrage models that are able to fit today's term structure of interest rates. It is relatively straightforward to translate the mathematical description of the evolution of future interest rates onto a tree or lattice and so interest rate derivatives such as bermudan swaptions can be valued in the model.
-
-The first Hull–White model was described by John C. Hull and Alan White in 1990. The model is still popular in the market today.
-
+                            <p align="justify">
+                                In the <b>Volatility</b> option, we compare how different types of volatility (constant and stochastic)
+                                can affect the option prices.
                             </p>
-                            <br>                            <br>
-                             <a class="btn btn-block  btn-primary" href="demo/volatility" role="button">Volatility</a>
+                            <p align="justify">
+                                Overall, we concluded that a stochastic volatility generates increased prices of
+                                In-The-Money (ITM) call options and decreases the prices of Out-The-Money (OTM) call options.
+                                Having an the opposite effect in put options.
+                            </p>
+                            <br>
+                            <br>
+                             <a class="btn btn-block  btn-primary" href="demo/volatility" role="button">STOCHASTIC VOLATILITY</a>
 
                         </div>
                         <div class="col-md-3"></div>
