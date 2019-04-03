@@ -39,6 +39,21 @@ class Param:
          except:
             return [80,100,120]
 
+    def get_risk_aversion(self):
+         try:
+            if(self.risk_aversion is None or len(self.risk_aversion)<2):
+                return [1,2,3,4,5,6,7,8,9,10]
+            risk_aversion = self.risk_aversion.split(',')
+            if(len(risk_aversion) < 1):
+                return [1,2,3,4,5,6,7,8,9,10]
+            risk_aversions = []
+            for item in risk_aversion:
+                risk_aversions.append(float(item))
+            return risk_aversions
+         except:
+            return [1,2,3,4,5,6,7,8,9,10]
+
+
     def get_iteration(self):
         try:
             if (self.iterations is None or len(self.iterations) < 2):

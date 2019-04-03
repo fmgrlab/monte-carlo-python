@@ -2,29 +2,30 @@
 
 {% block header %}
 <li>
-    <a href="volatility">By volatility</a>
+    <a href="iteration">By iteration</a>
 </li>
 <li>
-    <a href="risk">By risk aversion</a>
+    <a href="volatility">By volatility</a>
 </li>
 {% endblock %}
 
 {% block content %}
 <div class="page-header" style="margin: 1%">
     <h4>
-        Effects of number of iteration on option prices.
+        Effects of risk aversion on the option pricing.
     </h4><br>
     <p align="justify">
-                                In the <b>Iterations</b> option, we can check how different numbers of simulation iterations can affect
-                                the option prices given by the model.
+                                In the <b>Relative Risk Aversion</b> option, we can understand how different levels of
+                                relative risk aversion b on option prices.
                             </p>
-     As showed in the results, analyzing the standard errors, we find that the model
-                                has an O(&radic;<span style="text-decoration: overline">n</span>) convergence rate.
-                                Also, we can see that the standard errors decrease with increasing the iterations number.
-    <br>
+                            <p align="justify">
+                                We concluded that, in general, increasing levels of risk aversion decreases call option prices and
+                                increase put option prices.In incomplete market structures, the relative risk aversion
+                                has an important effect on option prices.
+                            </p>
 </div>
 
-<form role="form" name="computeForm" id="computeForm" method="get" action="/mcarlo/demo/iteration">
+<form role="form" name="computeForm" id="computeForm" method="get" action="/mcarlo/demo/risk">
     <div class="container-fluid">
         <div class="row" style="margin:1%">
             <div class="form-group row">
@@ -98,11 +99,6 @@
                     <input class="form-control" id="step_number" name="step_number"
                            value="{{ param.number_of_step }}">
                 </div>
-                 <div class="col-xs-2">
-                    <label for="maturity">Risk Aversion</label>
-                    <input class="form-control" id="risk_aversion" name="risk_aversion"
-                           value="{{ param.risk_aversion }}">
-                </div>
                 <div class="col-xs-2">
                     <label for="strike">Strike</label>
                     <input class="form-control" id="strike" name="strike"
@@ -113,7 +109,11 @@
                     <input class="form-control" id="iterations" name="iterations"
                            value="{{ param.iterations }}"  pattern="([0-9]+\.)?[0-9]+">
                 </div>
-                 <div class="col-xs-1"></div>
+                 <div class="col-xs-4">
+                    <label for="maturity">Risk Aversion</label>
+                    <input class="form-control" id="risk_aversion" name="risk_aversion"
+                           value="{{ param.risk_aversion }}">
+                </div>
             </div>
         </div>
         <div class="row">
@@ -153,13 +153,12 @@
     <table cellpadding="5" class="table table-bordered table-hover table-condensed">
         <thead>
         <tr>
-            <th colspan="2"></th>
             <th colspan="4" style="border-bottom-color:red;text-align:center">Option Call</th>
             <th colspan="4" style="border-bottom-color:#3531ff;text-align:center">Option Put</th>
         </tr>
         <tr>
             <th>Strike</th>
-            <th>Iteration</th>
+            <th>Risk aversion</th>
             <th>Price</th>
             <th>Std</th>
             <th>Conf up</th>
@@ -177,7 +176,7 @@
                 {{ item.strike }}
             </td>
             <td>
-                {{ item.iteration}}
+                {{ item.risk_aversion}}
             </td>
             <td>
                 {{ item.call.price|floatformat:4 }}
