@@ -24,3 +24,4 @@ urlpatterns = [
     path('demo/volatility', views.demo_volatility, name='demo-volatilily'),
     path('demo/risk', views.demo_risk, name='demo-risk'),
 ]
+

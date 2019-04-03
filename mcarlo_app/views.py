@@ -62,6 +62,13 @@ def demo_volatility(request):
         return render(request, 'mcarlo_volatility.html', {'param': param})
     return render(request,'mcarlo_volatility.html')
 
+def handler404(request):
+    return render(request, '404.html', status=404)
+def handler500(request):
+    return render(request, '500.html', status=500)
+def handler504(request):
+    return render(request, '504.html', status=504)
+
 def parse_param(request):
     param = Param()
     param.stock_initial = int(request.GET.get('stock_initial',100))
