@@ -14,26 +14,12 @@ def home(request):
 def demo_risk(request):
     param = parse_param(request)
     if 'show_cvs' not in request.GET and 'show_api' not in request.GET and 'show_graph' not in request.GET:
-        param.iterations =  iteration = param.get_iteration()[0]
-        param.risk_aversion = str(param.get_risk_aversion())[1:-1]
         return render(request, 'mcarlo_risk.html', {'param': param})
-
     strikes = param.get_strike()
     risk_aversions = param.get_risk_aversion()
     iteration = param.get_iteration()[0]
     engine = Engine(param=param)
-    payoffs = []
-    for risk_aversion in risk_aversions:
-        rand = engine.generate_random_by_step(iteration)
-        volatility = engine.compute_stock_volatility_path(iteration, rand)
-        market_price = engine.compute_market_path(iteration, rand)
-        for strike_item in strikes:
-            payoff = engine.compute_stock_path(volatility, market_price, iteration, strike_item, risk_aversion, rand)
-            payoffs.append(payoff)
-    payoffs.sort(key= lambda payoff:payoff.strike)
-
-    param.iterations = iteration
-    param.risk_aversion = risk_aversions
+    payoffs = engine.compute_payoff_by_risk_aversion(iteration,strikes,risk_aversions)
     output = OutPut(param)
     output.payoffs = payoffs
     if 'show_cvs' in request.GET:
@@ -52,18 +38,10 @@ def demo_iteration(request):
     if 'show_cvs' not in request.GET and 'show_api' not in request.GET and 'show_graph' not in request.GET:
          return render(request, 'mcarlo_iteration.html', {'param': param})
     engine = Engine(param=param)
-    payoffs = []
     strikes = param.get_strike()
     risk_aversion = param.get_risk_aversion()[0]
     number_of_iterations = param.get_iteration()
-    for iteration in number_of_iterations:
-        rand = engine.generate_random_by_step(iteration)
-        volatility = engine.compute_stock_volatility_path(iteration, rand)
-        market_price = engine.compute_market_path(iteration, rand)
-        for strike_item in strikes:
-            payoff = engine.compute_stock_path(volatility, market_price, iteration, strike_item, risk_aversion, rand)
-            payoffs.append(payoff)
-    payoffs.sort(key= lambda payoff:payoff.strike)
+    payoffs = engine.compute_payoff_by_iterations(number_of_iterations,strikes,risk_aversion)
     output = OutPut(param)
     output.payoffs = payoffs
     param.iterations = number_of_iterations
@@ -79,6 +57,9 @@ def demo_iteration(request):
         return render(request,'mcarlo_iteration.html',{'param': param, 'output':output,'graph': graph,'call': html_fig2})
 
 def demo_volatility(request):
+    param = parse_param(request)
+    if 'show_cvs' not in request.GET and 'show_api' not in request.GET and 'show_graph' not in request.GET:
+        return render(request, 'mcarlo_volatility.html', {'param': param})
     return render(request,'mcarlo_volatility.html')
 
 def parse_param(request):

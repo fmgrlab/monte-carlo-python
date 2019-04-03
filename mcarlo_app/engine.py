@@ -64,6 +64,30 @@ class Engine:
         payoff = self.compute_stock_path(volatility, market_price, iteration, strike, b, rand)
         return  payoff
 
+    def compute_payoff_by_iterations(self,number_of_iterations,strikes, risk_aversion):
+        payoffs = []
+        for iteration in number_of_iterations:
+            rand = self.generate_random_by_step(iteration)
+            volatility = self.compute_stock_volatility_path(iteration, rand)
+            market_price = self.compute_market_path(iteration, rand)
+            for strike_item in strikes:
+                payoff = self.compute_stock_path(volatility, market_price, iteration, strike_item, risk_aversion, rand)
+                payoffs.append(payoff)
+        payoffs.sort(key=lambda payoff: payoff.strike)
+        return  payoffs
+
+    def compute_payoff_by_risk_aversion(self,iteration,strikes,risk_aversions):
+        payoffs = []
+        for risk_aversion in risk_aversions:
+            rand = self.generate_random_by_step(iteration)
+            volatility = self.compute_stock_volatility_path(iteration, rand)
+            market_price = self.compute_market_path(iteration, rand)
+            for strike_item in strikes:
+                payoff = self.compute_stock_path(volatility, market_price, iteration, strike_item, risk_aversion,rand)
+                payoffs.append(payoff)
+        payoffs.sort(key=lambda payoff: payoff.strike)
+        return payoffs
+
     def compute_stock_path(self, volatility, market_prices,number_iterations, strike, risk_aversion, rand):
         initial_stock = self.param.stock_initial
         stock_price = np.zeros((self.param.number_of_step + 1, number_iterations), dtype=np.float)
