@@ -76,6 +76,24 @@ class Engine:
         payoffs.sort(key=lambda payoff: payoff.strike)
         return  payoffs
 
+    def compute_payoff_by_volatility(self,number_of_iterations,strike, risk_aversion):
+        payoffs_vol_constant = []
+        payoffs_vol_stochastic = []
+        for iteration in number_of_iterations:
+            rand = self.generate_random_by_step(iteration)
+            market_price = self.compute_market_path(iteration, rand)
+            volatility = self.compute_stock_volatility_path(iteration, rand)
+            payoff = self.compute_stock_path(volatility, market_price, iteration, 100, 5, rand)
+            payoffs_vol_stochastic.append(payoff)
+
+            volatility_constant = self.compute_constant_volatility_path()
+            payoff_c = self.compute_stock_path(volatility_constant, market_price, iteration, 100, 5, rand)
+            payoffs_vol_constant.append(payoff_c)
+
+        payoffs_vol_stochastic.sort(key=lambda payoff: payoff.strike)
+        payoffs_vol_constant.sort(key=lambda payoff: payoff.strike)
+        return payoffs_vol_stochastic,payoffs_vol_constant
+
     def compute_payoff_by_risk_aversion(self,iteration,strikes,risk_aversions):
         payoffs = []
         for risk_aversion in risk_aversions:

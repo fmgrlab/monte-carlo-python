@@ -60,7 +60,13 @@ def demo_volatility(request):
     param = parse_param(request)
     if 'show_cvs' not in request.GET and 'show_api' not in request.GET and 'show_graph' not in request.GET:
         return render(request, 'mcarlo_volatility.html', {'param': param})
-    return render(request,'mcarlo_volatility.html')
+    engine = Engine(param=param)
+    risk_aversion = param.risk_aversion
+    number_of_iterations = param.get_iteration()
+    payoff_stock, payoff_vol_constant = engine.compute_payoff_by_volatility(number_of_iterations,param.strike,risk_aversion)
+    output = zip(payoff_stock,payoff_vol_constant)
+    output_call = zip(payoff_stock, payoff_vol_constant)
+    return render(request,'mcarlo_volatility.html',{'output': output,'param': param,'put': output_call})
 
 def handler404(request):
     return render(request, '404.html', status=404)

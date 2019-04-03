@@ -27,7 +27,7 @@
                             </p>
 </div>
 
-<form role="form" name="computeForm" id="computeForm" method="get" action="/mcarlo/demo/iteration">
+<form role="form" name="computeForm" id="computeForm" method="get" action="/mcarlo/demo/volatility">
     <div class="container-fluid">
         <div class="row" style="margin:1%">
             <div class="form-group row">
@@ -138,7 +138,6 @@
     </div>
 </form>
 <br><br>
-{% if output %}
 <h4 style=" margin: 1%">Call</h4>
 <div class="row" style=" margin: 1%; padding: 10px;border: 1px solid #8c8c8c;min-height: 15cm;overflow-x: scroll">
      <div class="col-md-6">
@@ -166,7 +165,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for item in output.payoffs %}
+        {% for item,item_constant  in put %}
         <tr>
             <td>
                 {{ item.strike }}
@@ -187,16 +186,16 @@
                 {{ item.call.confidence_down|floatformat:4 }}
             </td>
             <td style="border-left-color:#3531ff">
-                {{ item.put.price|floatformat:4 }}
+                {{ item_constant.call.price|floatformat:4 }}
             </td>
             <td>
-                {{ item.put.std_error|floatformat:4 }}
+                {{ item_constant.call.std_error|floatformat:4 }}
             </td>
             <td>
-                {{ item.put.confidence_up|floatformat:4 }}
+                {{ item_constant.call.confidence_up|floatformat:4 }}
             </td>
             <td>
-                {{ item.put.confidence_down|floatformat:4 }}
+                {{ item_constant.call.confidence_down|floatformat:4 }}
             </td>
         </tr>
         {% endfor %}
@@ -233,7 +232,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for item in output.payoffs %}
+        {% for item,item_constant in output %}
         <tr>
             <td>
                 {{ item.strike }}
@@ -242,18 +241,6 @@
                 {{ item.risk_aversion}}
             </td>
             <td>
-                {{ item.call.price|floatformat:4 }}
-            </td>
-            <td>
-                {{ item.call.std_error|floatformat:4 }}
-            </td>
-            <td>
-                {{ item.call.confidence_up|floatformat:4 }}
-            </td>
-            <td>
-                {{ item.call.confidence_down|floatformat:4 }}
-            </td>
-            <td style="border-left-color:#3531ff">
                 {{ item.put.price|floatformat:4 }}
             </td>
             <td>
@@ -265,13 +252,24 @@
             <td>
                 {{ item.put.confidence_down|floatformat:4 }}
             </td>
+            <td style="border-left-color:#3531ff">
+                {{ item_constant.put.price|floatformat:4 }}
+            </td>
+            <td>
+                {{ item_constant.put.std_error|floatformat:4 }}
+            </td>
+            <td>
+                {{ item_constant.put.confidence_up|floatformat:4 }}
+            </td>
+            <td>
+                {{ item_constant.put.confidence_down|floatformat:4 }}
+            </td>
         </tr>
         {% endfor %}
 
     </table>
      </div>
 </div>
-{% endif %}
 
 {% endblock %}
 
