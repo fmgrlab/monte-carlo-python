@@ -64,7 +64,10 @@ def demo_volatility(request):
     risk_aversion = param.risk_aversion
     number_of_iterations = param.get_iteration()
     payoff_stock, payoff_vol_constant = engine.compute_payoff_by_volatility(number_of_iterations,param.strike,risk_aversion)
-    output = zip(payoff_stock,payoff_vol_constant)
+    if 'show_api' in request.GET:
+        json = DataRender.to_json(payoff_stock,payoff_vol_constant,param)
+        return JsonResponse(json.as_json())
+    output = zip(payoff_stock, payoff_vol_constant)
     output_put = zip(payoff_stock, payoff_vol_constant)
     if 'show_graph' in request.GET:
         call_graph, graph_put = DataRender.to_graph_volatility(payoff_stock, payoff_vol_constant)

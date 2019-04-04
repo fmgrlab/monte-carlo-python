@@ -129,6 +129,25 @@ class Payoff:
         dict['call'] = self.call.as_json()
         return dict
 
+class PayoffVol:
+
+    def __init__(self):
+        self.strike= 0
+        self.iteration = 0
+        self.risk_aversion = 0
+        self.vol_const = None
+        self.vol_stockas = None
+
+    def as_json(self):
+        dict = OrderedDict()
+        dict['strike'] = self.strike
+        dict['risk_aversion'] = self.risk_aversion
+        dict['iteration'] = self.iteration
+        dict['vol_const'] = self.vol_const.as_json()
+        dict['vol_stockas'] = self.vol_stockas.as_json()
+        return dict
+
+
 
 class OutPut:
     def __init__(self, param):
@@ -145,13 +164,13 @@ class OutPut:
 class OutPutVolatility(OutPut):
     def __init__(self,param):
         self.param = param
-        self.payoffs = []
-        self.payoffs_constant = []
+        self.put = []
+        self.call = []
 
     def as_json(self):
         dict = OrderedDict()
         dict['input'] = self.param.as_json()
-        dict['payoffs'] = [ob.as_json() for ob in self.payoffs]
-        dict['payoffs_vol_constant'] = [ob.as_json() for ob in self.payoffs_constant]
+        dict['call'] = [ob.as_json() for ob in self.call]
+        dict['put'] = [ob.as_json() for ob in self.put]
         return dict
 

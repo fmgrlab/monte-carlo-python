@@ -5,6 +5,7 @@ import csv
 import mpld3
 from pylab import *
 from collections import defaultdict
+from mcarlo_app.domain import PayoffVol,OutPutVolatility
 
 class DataRender:
 
@@ -153,3 +154,25 @@ class DataRender:
         html_fig2 = mpld3.fig_to_html(fig2, template_type='general')
         plt.close(fig2)
         return html_fig, html_fig2
+
+    def to_json(payoff_stoc,payoff_const,param):
+        output = OutPutVolatility(param)
+
+        payoffs = zip(payoff_stoc, payoff_const)
+        for pstoc, pconst in payoffs:
+            p = PayoffVol()
+            p.risk_aversion = pstoc.risk_aversion
+            p.iteration = pstoc.iteration
+            p.strike = pstoc.strike
+            p.vol_const = pconst.call
+            p.vol_stockas = pstoc.call
+
+            output.call.append(p)
+            p = PayoffVol()
+            p.risk_aversion = pstoc.risk_aversion
+            p.iteration = pstoc.iteration
+            p.strike = pstoc.strike
+            p.vol_const = pconst.put
+            p.vol_stockas = pstoc.put
+            output.put.append(p)
+        return output
