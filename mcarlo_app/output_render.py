@@ -176,3 +176,42 @@ class DataRender:
             p.vol_stockas = pstoc.put
             output.put.append(p)
         return output
+
+    def to_csv_vol(output, response):
+        writer = csv.writer(response)
+        writer.writerow(['Stock initial', output.param.stock_initial])
+        writer.writerow(['Stock return', output.param.stock_return])
+        writer.writerow(['Correlation stock volatility', output.param.correlation_stock_volatility])
+        writer.writerow(['Correlation stock market', output.param.correlation_stock_market])
+        writer.writerow(['Volatility initial', output.param.volatility_initial])
+        writer.writerow(['Volatility sigma', output.param.volatility_sigma])
+        writer.writerow(['Volatility speed', output.param.volatility_speed])
+        writer.writerow(['Volatility long', output.param.volatility_long])
+        writer.writerow(['Market return ', output.param.market_return])
+        writer.writerow(['Volatility sigma', output.param.market_volatility])
+        writer.writerow(['Risk aversion ', output.param.risk_aversion])
+        writer.writerow(['Maturity', output.param.maturity])
+        writer.writerow(['Number of steps ', output.param.number_of_step])
+        writer.writerow("Call")
+        writer.writerow(
+            ['Strike price', 'Iteration', 'Vol const Price', ' Vol const sdt', 'Vol const Conf up', 'Vol const bound down', 'Vol sto Price',
+             ' Vol sto sdt ', 'Vol sto Conf up', 'Vol sto conf down'])
+        for item in output.call:
+            writer.writerow(
+                [item.strike, item.iteration, item.vol_const.price, item.vol_const.std_error, item.vol_const.confidence_up,
+                 item.vol_const.confidence_down, item.vol_stockas.price, item.vol_stockas.std_error, item.vol_stockas.confidence_up,
+                 item.vol_stockas.confidence_down])
+
+        writer.writerow("Put")
+        writer.writerow(
+            ['Strike price', 'Iteration', 'Vol const Price', ' Vol const sdt', 'Vol const Conf up',
+             'Vol const bound down', 'Vol sto Price',
+             ' Vol sto sdt ', 'Vol sto Conf up', 'Vol sto conf down'])
+        for item in output.put:
+            writer.writerow(
+                [item.strike, item.iteration, item.vol_const.price, item.vol_const.std_error,
+                 item.vol_const.confidence_up,
+                 item.vol_const.confidence_down, item.vol_stockas.price, item.vol_stockas.std_error,
+                 item.vol_stockas.confidence_up,
+                 item.vol_stockas.confidence_down])
+        return response

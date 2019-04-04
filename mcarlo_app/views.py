@@ -64,15 +64,20 @@ def demo_volatility(request):
     risk_aversion = param.risk_aversion
     number_of_iterations = param.get_iteration()
     payoff_stock, payoff_vol_constant = engine.compute_payoff_by_volatility(number_of_iterations,param.strike,risk_aversion)
+    json = DataRender.to_json(payoff_stock, payoff_vol_constant, param)
+    if 'show_cvs' in request.GET:
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="monte-carlo-effect-volatility.csv"'
+        return DataRender.to_csv_vol(json,response)
+
     if 'show_api' in request.GET:
-        json = DataRender.to_json(payoff_stock,payoff_vol_constant,param)
         return JsonResponse(json.as_json())
     output = zip(payoff_stock, payoff_vol_constant)
     output_put = zip(payoff_stock, payoff_vol_constant)
     if 'show_graph' in request.GET:
         call_graph, graph_put = DataRender.to_graph_volatility(payoff_stock, payoff_vol_constant)
         return render(request, 'mcarlo_volatility.html',{'param': param, 'output': output, 'call_graph': call_graph, 'output_put': output_put, 'graph_put':graph_put})
-    return render(request,'mcarlo_volatility.html',{'param': param, 'output': output,  'output_put': output_put})
+    return render(request,'mcarlo_volatility.html',{'param': param})
 
 def handler404(request):
     return render(request, '404.html', status=404)
