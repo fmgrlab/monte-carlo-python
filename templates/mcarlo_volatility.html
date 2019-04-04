@@ -139,25 +139,26 @@
 </form>
 <br><br>
 <h4 style=" margin: 1%">Call</h4>
-<div class="row" style=" margin: 1%; padding: 10px;border: 1px solid #8c8c8c;min-height: 15cm;overflow-x: scroll">
+<div class="row" style=" margin: 1%; padding: 10px;min-height: 15cm">
      <div class="col-md-6">
-         <div style="display: flex; justify-content: center;">{{ graph|safe }}</div>
+         <div style="display: flex; justify-content: center;">{{ call_graph|safe }}</div>
      </div>
      <div class="col-md-6">
+         <br>
          <table cellpadding="5" class="table table-bordered table-hover table-condensed">
         <thead>
         <tr>
              <th colspan="2"></th>
-            <th colspan="4" style="border-bottom-color:red;text-align:center">Volatility constant</th>
-            <th colspan="4" style="border-bottom-color:#3531ff;text-align:center">Volatility stochastic</th>
+            <th colspan="4" style="border-bottom-color:red;text-align:center">Constant volatility</th>
+            <th colspan="4" style="border-bottom-color:#3531ff;text-align:center">Stochastic volatility</th>
         </tr>
         <tr>
             <th>Strike</th>
             <th>Iteration</th>
-            <th>Price</th>
             <th>Std</th>
             <th>Conf up</th>
             <th>Conf Down</th>
+            <th>Price</th>
             <th>Price</th>
             <th>Std Error</th>
             <th>Conf Up</th>
@@ -165,7 +166,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for item,item_constant  in put %}
+        {% for item,item_constant  in output %}
         <tr>
             <td>
                 {{ item.strike }}
@@ -173,9 +174,7 @@
             <td>
                 {{ item.risk_aversion}}
             </td>
-            <td>
-                {{ item.call.price|floatformat:4 }}
-            </td>
+
             <td>
                 {{ item.call.std_error|floatformat:4 }}
             </td>
@@ -185,7 +184,10 @@
             <td>
                 {{ item.call.confidence_down|floatformat:4 }}
             </td>
-            <td style="border-left-color:#3531ff">
+             <td class="bg-primary">
+                {{ item.call.price|floatformat:4 }}
+            </td>
+            <td style="border-left-color:#3531ff" class="bg-info">
                 {{ item_constant.call.price|floatformat:4 }}
             </td>
             <td>
@@ -206,25 +208,27 @@
 
 <br><br>
 <h4 style=" margin: 1%">Option Put</h4>
-<div class="row" style=" margin: 1%; padding: 10px;border: 1px solid #8c8c8c;min-height: 15cm;overflow-x: scroll">
+<div class="row" style=" margin: 1%; padding: 10px;min-height: 15cm">
      <div class="col-md-6">
-         <div style="display: flex; justify-content: center;">{{ graph|safe }}</div>
+         <div style="display: flex; justify-content: center;">{{graph_put |safe }}</div>
      </div>
      <div class="col-md-6">
+         <br>
          <table cellpadding="5" class="table table-bordered table-hover table-condensed">
         <thead>
         <tr>
             <th colspan="2"></th>
-            <th colspan="4" style="border-bottom-color:red;text-align:center">Volatility constant</th>
-            <th colspan="4" style="border-bottom-color:#3531ff;text-align:center">Volatility stochastic</th>
+            <th colspan="4" style="border-bottom-color:red;text-align:center">Constant volatility</th>
+            <th colspan="4" style="border-bottom-color:#3531ff;text-align:center"> Stochastic volatility</th>
         </tr>
         <tr>
             <th>Strike</th>
             <th>Iteration</th>
-            <th>Price</th>
+
             <th>Std</th>
             <th>Conf up</th>
             <th>Conf Down</th>
+             <th>Price</th>
             <th>Price</th>
             <th>Std Error</th>
             <th>Conf Up</th>
@@ -232,16 +236,13 @@
         </tr>
         </thead>
         <tbody>
-        {% for item,item_constant in output %}
+        {% for item,item_constant in output_put %}
         <tr>
             <td>
                 {{ item.strike }}
             </td>
             <td>
                 {{ item.risk_aversion}}
-            </td>
-            <td>
-                {{ item.put.price|floatformat:4 }}
             </td>
             <td>
                 {{ item.put.std_error|floatformat:4 }}
@@ -252,7 +253,10 @@
             <td>
                 {{ item.put.confidence_down|floatformat:4 }}
             </td>
-            <td style="border-left-color:#3531ff">
+            <td class="bg-info">
+                {{ item.put.price|floatformat:4 }}
+            </td>
+            <td style="border-left-color:#3531ff" class="bg-primary">
                 {{ item_constant.put.price|floatformat:4 }}
             </td>
             <td>

@@ -65,8 +65,11 @@ def demo_volatility(request):
     number_of_iterations = param.get_iteration()
     payoff_stock, payoff_vol_constant = engine.compute_payoff_by_volatility(number_of_iterations,param.strike,risk_aversion)
     output = zip(payoff_stock,payoff_vol_constant)
-    output_call = zip(payoff_stock, payoff_vol_constant)
-    return render(request,'mcarlo_volatility.html',{'output': output,'param': param,'put': output_call})
+    output_put = zip(payoff_stock, payoff_vol_constant)
+    if 'show_graph' in request.GET:
+        call_graph, graph_put = DataRender.to_graph_volatility(payoff_stock, payoff_vol_constant)
+        return render(request, 'mcarlo_volatility.html',{'param': param, 'output': output, 'call_graph': call_graph, 'output_put': output_put, 'graph_put':graph_put})
+    return render(request,'mcarlo_volatility.html',{'param': param, 'output': output,  'output_put': output_put})
 
 def handler404(request):
     return render(request, '404.html', status=404)

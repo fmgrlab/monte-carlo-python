@@ -74,6 +74,45 @@ class DataRender:
         return html_fig, html_fig2
 
 
+    def to_graph_volatility(payoffs_constant,payoffs_stochas):
+        fig, ax = plt.subplots(figsize=(6, 6), sharex=True)
+        fig2, ax2 = plt.subplots(figsize=(6, 5), sharex=True)
+        yvals_stochastique = defaultdict(list)
+        yvals_constant = defaultdict(list)
+        xvals = []
+        payoffs = zip(payoffs_constant, payoffs_stochas)
+        for pstoc, pconst in payoffs:
+            xvals.append(pstoc.iteration)
+            yvals_stochastique['call'].append(pstoc.call.price)
+            yvals_stochastique['put'].append(pstoc.put.price)
+
+            yvals_constant['call'].append(pconst.call.price)
+            yvals_constant['put'].append(pconst.put.price)
+
+        ax.plot(xvals, yvals_stochastique['call'], label='Stochastic vol')
+        ax.legend(loc=1)
+        ax.plot(xvals, yvals_constant['call'], label='Constant vol')
+        ax.legend(loc=1)
+        ax.grid(True, alpha=0.3)
+        ax.set_xlabel('Iteration')
+        ax.set_ylabel('Option price')
+        ax.set_title('Effects of volatility on call price')
+
+        ax2.plot(xvals, yvals_stochastique['put'], label='Stochastic vol')
+        ax2.legend(loc=1)
+        ax2.plot(xvals, yvals_constant['put'], label='Stochastic vol')
+        ax2.legend(loc=1)
+
+        ax2.grid(True, alpha=0.3)
+        ax2.set_xlabel('Iteration')
+        ax2.set_ylabel('Option price')
+        ax2.set_title('Effects of volatility on put price')
+        call_fig = mpld3.fig_to_html(fig, template_type='general')
+        put_fig = mpld3.fig_to_html(fig2, template_type='general')
+        plt.close(fig)
+        plt.close(fig2)
+        return call_fig,put_fig
+
     def to_graph_iteration(payoffs, strikes):
         fig, ax = plt.subplots(figsize=(6, 5), sharex=True)
         fig2, ax2 = plt.subplots(figsize=(6, 5), sharex=True)
