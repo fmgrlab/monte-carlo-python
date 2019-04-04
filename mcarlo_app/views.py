@@ -12,7 +12,7 @@ def home(request):
 
 
 def demo_risk(request):
-    param = parse_param(request)
+    param = parse_param(request,is_risk=True)
     if 'show_cvs' not in request.GET and 'show_api' not in request.GET and 'show_graph' not in request.GET:
         return render(request, 'mcarlo_risk.html', {'param': param})
     strikes = param.get_strike()
@@ -44,8 +44,6 @@ def demo_iteration(request):
     payoffs = engine.compute_payoff_by_iterations(number_of_iterations,strikes,risk_aversion)
     output = OutPut(param)
     output.payoffs = payoffs
-    param.iterations = number_of_iterations
-    param.risk_aversion = risk_aversion
     if 'show_cvs' in request.GET:
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="monte-carlo-effect-volatility.csv"'
@@ -57,7 +55,7 @@ def demo_iteration(request):
         return render(request,'mcarlo_iteration.html',{'param': param, 'output':output,'graph': graph,'call': html_fig2})
 
 def demo_volatility(request):
-    param = parse_param(request)
+    param = parse_param(request,isVol=True)
     if 'show_cvs' not in request.GET and 'show_api' not in request.GET and 'show_graph' not in request.GET:
         return render(request, 'mcarlo_volatility.html', {'param': param})
     engine = Engine(param=param)
@@ -86,7 +84,7 @@ def handler500(request):
 def handler504(request):
     return render(request, '504.html', status=504)
 
-def parse_param(request):
+def parse_param(request, is_risk = False, isVol = False):
     param = Param()
     param.stock_initial = int(request.GET.get('stock_initial',100))
     param.stock_return = float(request.GET.get('stock_return', 0.1241))
@@ -100,15 +98,21 @@ def parse_param(request):
     param.volatility_speed = float(request.GET.get('volatility_speed', 0.5))
     param.volatility_sigma = float(request.GET.get('volatility_sigma', 0.05))
 
-    param.maturity = int(request.GET.get('maturity', 1))
-    param.strike = request.GET.get('strike', "80")
-    param.iterations = request.GET.get('iterations', "1000, 2000, 3000,4000,5000,6000,7000,8000,9000,10000")
-    param.number_of_step = 250
     param.correlation_stock_market = float(request.GET.get('correlation_stock_market', 0.5))
+
     param.correlation_stock_volatility = float(request.GET.get('correlation_stock_volatility', -0.5))
+    param.number_of_step = int(request.GET.get('step_number', 250))
+    param.maturity = int(request.GET.get('maturity', 1))
+    param.strike = request.GET.get('strike', "80,100,120")
+    if is_risk:
+        param.iterations = request.GET.get('iterations', "1000")
+        param.risk_aversion = request.GET.get('risk_aversion', "1,2,3,4,5,6,7,8,9,10")
+    else:
+        param.iterations = request.GET.get('iterations', "1000, 2000, 3000,4000,5000,6000,7000,8000,9000,10000")
+        param.risk_aversion = request.GET.get('risk_aversion', "5")
 
-    param.risk_aversion = request.GET.get('risk_aversion', 5)
+    if isVol:
+        param.strike = request.GET.get('strike', "120")
     param.dt = float(param.maturity)/ float(param.number_of_step)
-
     return param
 
