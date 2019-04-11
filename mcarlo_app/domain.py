@@ -2,6 +2,8 @@ import math
 from collections import OrderedDict
 
 
+
+
 class Param:
     def __init__(self):
         self.stock_initial = 0
@@ -20,53 +22,10 @@ class Param:
         self.number_of_step = 0
         self.correlation_stock_market = 0
         self.correlation_stock_volatility = 0
-        self.risk_aversion = 0
-        self.strike = 0
-        self.iterations = 0
+        self.risk_aversion = []
+        self.strike = []
+        self.iterations = []
         self.dt = 0
-
-    def get_strike(self):
-         try:
-            if(self.strike is None or len(self.strike)<2):
-                return [80,100,120]
-            strike = self.strike.split(',')
-            if(len(strike) < 1):
-                return [80, 100, 120]
-            strikes = []
-            for item in strike:
-                strikes.append(float(item))
-            return strikes
-         except:
-            return [80,100,120]
-
-    def get_risk_aversion(self):
-         try:
-            if(self.risk_aversion is None or len(self.risk_aversion)<2):
-                return [1,2,3,4,5,6,7,8,9,10]
-            risk_aversion = self.risk_aversion.split(',')
-            if(len(risk_aversion) < 1):
-                return [1,2,3,4,5,6,7,8,9,10]
-            risk_aversions = []
-            for item in risk_aversion:
-                risk_aversions.append(float(item))
-            return risk_aversions
-         except:
-            return [1,2,3,4,5,6,7,8,9,10]
-
-
-    def get_iteration(self):
-        try:
-            if (self.iterations is None or len(self.iterations) < 2):
-                return [1000, 10000, 100000]
-            iteration_value = self.iterations.split(',')
-            if (len(iteration_value) < 3):
-                return [1000, 10000, 100000]
-            iterations_parsed = []
-            for item in iteration_value:
-                iterations_parsed.append(int(item))
-            return iterations_parsed
-        except:
-            return [1000, 10000, 100000]
 
     def as_json(self):
         dict = OrderedDict()
@@ -91,7 +50,25 @@ class Param:
         dict['risk_aversion'] = self.risk_aversion
         return dict
 
+class RiskParam(Param):
+    def __init__(self):
+        self.risk_aversion = []
+        self.strike = []
+        self.iterations = 0
 
+class IterationParam(Param):
+    def __init__(self):
+        self.risk_aversion = 5
+        self.strike = []
+        self.iterations = []
+        self.iterations_display = ""
+        self.strike_display = ""
+
+class VoParam(Param):
+    def __init__(self):
+        self.risk_aversion = 0
+        self.strike = 0
+        self.iterations = []
 
 class Option:
 

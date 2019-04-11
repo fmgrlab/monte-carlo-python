@@ -10,7 +10,7 @@ class Engine:
     def compute_constant_volatility_path(self):
         volatility = []
         for i in range(0, self.param.number_of_step + 1):
-            volatility.append(self.param.volatility_initial)
+            volatility.append(selcalculate_call_pricef.param.volatility_initial)
         return volatility
 
     def compute_stock_volatility_path(self, number_iterations, rand):
