@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import render
 from pylab import *
-from mcarlo_app.param_handler import parse_param_iteration, parse_param_risk
+from mcarlo_app.param_handler import parse_param_iteration, parse_param_risk,parse_param_volatility
 from mcarlo_app.output_render import DataRender
 
 
@@ -35,7 +35,7 @@ def demo_iteration(request):
     output.payoffs = payoffs
     if 'show_cvs' in request.GET:
         response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="monte-carlo-effect-volatility.csv"'
+        response['Content-Disposition'] = 'attachment; filename="monte-carlo-effect-iteration.csv"'
         return DataRender.to_csv(output,response)
     if 'show_api' in request.GET:
         return JsonResponse(output.as_json())
@@ -57,7 +57,7 @@ def demo_risk(request):
     output.payoffs = payoffs
     if 'show_cvs' in request.GET:
         response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="monte-carlo-effect-volatility.csv"'
+        response['Content-Disposition'] = 'attachment; filename="monte-carlo-effect-risk.csv"'
         return DataRender.to_csv(output,response)
     if 'show_api' in request.GET:
         return JsonResponse(output.as_json())
@@ -66,4 +66,25 @@ def demo_risk(request):
         return render(request,'mcarlo_risk.html',{'param': riskParam, 'output':output,'graph_put': graph_put,'graph_call': call_graph})
 
 
+def demo_volatility(request):
+    param = parse_param_volatility(request)
+    if 'show_cvs' not in request.GET and 'show_api' not in request.GET and 'show_graph' not in request.GET:
+        return render(request, 'mcarlo_volatility.html', {'param': param})
+    engine = Engine(param=param)
+    number_of_iterations = param.iterations
+    payoff_vol_stoch, payoff_vol_constant = engine.compute_payoff_by_volatility(number_of_iterations,param.strike,param.risk_aversion)
+    json = DataRender.to_json(payoff_vol_stoch, payoff_vol_constant, param)
+    if 'show_cvs' in request.GET:
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="monte-carlo-effect-volatility.csv"'
+        return DataRender.to_csv_vol(json,response)
+
+    if 'show_api' in request.GET:
+        return JsonResponse(json.as_json())
+    output = zip(payoff_vol_stoch, payoff_vol_constant)
+    output_put = zip(payoff_vol_stoch, payoff_vol_constant)
+    if 'show_graph' in request.GET:
+        call_graph, graph_put = DataRender.to_graph_volatility(payoff_vol_stoch, payoff_vol_constant)
+        return render(request, 'mcarlo_volatility.html',{'param': param, 'output': output, 'output_put': output_put, 'graph_put': graph_put,'graph_call': call_graph})
+    return render(request,'mcarlo_volatility.html',{'param': param})
 

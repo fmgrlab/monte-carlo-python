@@ -67,11 +67,12 @@ class IterationParam(Param):
         self.iterations_display = ""
         self.strike_display = ""
 
-class VoParam(Param):
+class VolParam(Param):
     def __init__(self):
-        self.risk_aversion = 0
+        self.risk_aversion = 5
         self.strike = 0
         self.iterations = []
+        self.iterations_display = ""
 
 class Option:
 

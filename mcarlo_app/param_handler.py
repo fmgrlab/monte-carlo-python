@@ -32,8 +32,8 @@ def parse_param_iteration(request):
     list_values_strike = iterationParam.strike_display.split(',')
     for value in list_values_strike:
         iterationParam.strike.append(int(value))
-    iterationParam.iterations_display = request.GET.get('iterations', '1000,10000,100000')
 
+    iterationParam.iterations_display = request.GET.get('iterations', '1000,10000,100000')
     list_values_iteration = iterationParam.iterations_display.split(',')
     for value in list_values_iteration:
         iterationParam.iterations.append(int(value))
@@ -53,4 +53,16 @@ def parse_param_risk(request):
     for value in list_values_risk:
         riskParam.risk_aversion.append(int(value))
     return riskParam
+
+def parse_param_volatility(request):
+    volparam = VolParam()
+    parse_param_common(request,volparam)
+    volparam.strike = int(request.GET.get('strike', '100'))
+    volparam.risk_aversion = int(request.GET.get('risk_aversion', '5'))
+
+    volparam.iterations_display = request.GET.get('iterations', '1000,10000,100000')
+    list_values_iteration = volparam.iterations_display.split(',')
+    for value in list_values_iteration:
+        volparam.iterations.append(int(value))
+    return volparam
 
