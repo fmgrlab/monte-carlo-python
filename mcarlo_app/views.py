@@ -10,6 +10,8 @@ from mcarlo_app.output_render import DataRender
 def home(request):
     return render(request,'index.html')
 
+def about(request):
+    return render(request,'about.html')
 
 def demo_risk(request):
     param = parse_param(request,is_risk=True)
@@ -30,7 +32,7 @@ def demo_risk(request):
         return JsonResponse(output.as_json())
     if 'show_graph' in request.GET:
         graph, html_fig2 = DataRender.to_graph_risk(payoffs, strikes)
-        return render(request,'mcarlo_risk.html',{'param': param, 'output':output,'graph': graph,'call': html_fig2})
+        return render(request,'mcarlo_risk.html',{'param': param, 'output':output,'graph_put': html_fig2,'graph_call': graph})
 
 
 def demo_iteration(request):
@@ -51,8 +53,8 @@ def demo_iteration(request):
     if 'show_api' in request.GET:
         return JsonResponse(output.as_json())
     if 'show_graph' in request.GET:
-        graph, html_fig2 = DataRender.to_graph_iteration(payoffs, strikes)
-        return render(request,'mcarlo_iteration.html',{'param': param, 'output':output,'graph': graph,'call': html_fig2})
+        call_graph, graph_put = DataRender.to_graph_iteration(payoffs, strikes)
+        return render(request,'mcarlo_iteration.html',{'param': param, 'output':output,'graph_put': graph_put,'graph_call': call_graph})
 
 def demo_volatility(request):
     param = parse_param(request,isVol=True)
@@ -74,7 +76,7 @@ def demo_volatility(request):
     output_put = zip(payoff_stock, payoff_vol_constant)
     if 'show_graph' in request.GET:
         call_graph, graph_put = DataRender.to_graph_volatility(payoff_stock, payoff_vol_constant)
-        return render(request, 'mcarlo_volatility.html',{'param': param, 'output': output, 'call_graph': call_graph, 'output_put': output_put, 'graph_put':graph_put})
+        return render(request, 'mcarlo_volatility.html',{'param': param, 'output': output, 'output_put': output_put, 'graph_put': graph_put,'graph_call': call_graph})
     return render(request,'mcarlo_volatility.html',{'param': param})
 
 def handler404(request):

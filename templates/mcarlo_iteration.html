@@ -24,7 +24,7 @@
     <br>
 </div>
 
-<form role="form" name="computeForm" id="computeForm" method="get" action="/mcarlo/demo/iteration">
+<form role="form" name="computeForm" id="computeForm" method="get" action="/iteration">
     <div class="container-fluid">
         <div class="row" style="margin:1%">
             <div class="form-group row">
@@ -38,13 +38,13 @@
                     <input class="form-control" id="stock_return" name="stock_return"
                            value="{{ param.stock_return }}"  pattern="([0-9]+\.)?[0-9]+">
                 </div>
-                 <div class="col-xs-1">
+                 <div class="col-xs-1" hidden>
                     <label for="market_return" lang="latex">M_0</label>
                     <input class="form-control" id="market_initial" name="market_return"
                            value="{{ param.market_return }}"  pattern="([0-9]+\.)?[0-9]+">
                 </div>
                 <div class="col-xs-1">
-                    <label for="market_return" lang="latex">\mu_m</label>
+                    <label for="market_return" lang="latex">\mu_M</label>
                     <input class="form-control" id="market_return" name="market_return"
                            value="{{ param.market_return }}"  pattern="([0-9]+\.)?[0-9]+">
                 </div>
@@ -70,17 +70,18 @@
                            value="{{ param.volatility_sigma }}"  pattern="([0-9]+\.)?[0-9]+">
                 </div>
                 <div class="col-xs-1">
-                    <label for="market_volatility" lang="latex">\sigma_m</label>
+                    <label for="market_volatility" lang="latex">\sigma_M</label>
                     <input class="form-control" id="market_volatility" name="market_volatility"
                            value="{{ param.market_volatility }}"  pattern="([0-9]+\.)?[0-9]+">
                 </div>
+                <div class="col-xs-1"></div>
                 <div class="col-xs-1">
                     <label for="correlation_stock_volatility" lang="latex">\rho_{sv}</label>
                     <input class="form-control" id="correlation_stock_volatility" name="correlation_stock_volatility"
                            value="{{ param.correlation_stock_volatility }}" pattern="(^-?[0-9]+\.)?[0-9]+">
                 </div>
                 <div class="col-xs-1">
-                    <label for="correlation_stock_market" lang="latex">\rho_{sm}</label>
+                    <label for="correlation_stock_market" lang="latex">\rho_{sM}</label>
                     <input class="form-control" id="correlation_stock_market" name="correlation_stock_market"
                            value="{{ param.correlation_stock_market }}"  pattern="(^-?[0-9]+\.)?[0-9]+">
                 </div>
@@ -94,7 +95,7 @@
                            value="{{ param.maturity }}">
                 </div>
                 <div class="col-xs-2">
-                    <label for="step_number">Number of step</label>
+                    <label for="step_number">Number of steps</label>
                     <input class="form-control" id="step_number" name="step_number"
                            value="{{ param.number_of_step }}">
                 </div>
@@ -140,11 +141,11 @@
 
     <div class="col-md-6">
         <h5>Call</h5>
-        <div>{{ call|safe }}</div>
+        <div>{{ graph_call|safe }}</div>
     </div>
     <div class="col-md-6">
         <h5>Put</h5>
-        <div>{{ graph|safe }}</div>
+        <div>{{ graph_put|safe }}</div>
     </div>
 </div>
 
