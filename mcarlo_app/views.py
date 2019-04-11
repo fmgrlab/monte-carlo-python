@@ -8,6 +8,19 @@ from mcarlo_app.param_handler import parse_param_iteration, parse_param_risk
 from mcarlo_app.output_render import DataRender
 
 
+def home(request):
+    return render(request,'index.html')
+
+def about(request):
+    return render(request,'about.html')
+
+def handler404(request):
+    return render(request, '404.html', status=404)
+def handler500(request):
+    return render(request, '500.html', status=500)
+def handler504(request):
+    return render(request, '504.html', status=504)
+
 
 def demo_iteration(request):
     iterationParam = parse_param_iteration(request)
