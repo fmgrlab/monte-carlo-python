@@ -39,3 +39,18 @@ def parse_param_iteration(request):
         iterationParam.iterations.append(int(value))
     return iterationParam
 
+
+def parse_param_risk(request):
+    riskParam = RiskParam()
+    parse_param_common(request,riskParam)
+    riskParam.iterations = int(request.GET.get('iterations', '100000'))
+    riskParam.strike_display = request.GET.get('strike', "80,100,120")
+    list_values_strike = riskParam.strike_display.split(',')
+    for value in list_values_strike:
+        riskParam.strike.append(int(value))
+    riskParam.risk_aversion_display = request.GET.get('risk_aversion', '1,3,5,10')
+    list_values_risk = riskParam.risk_aversion_display.split(',')
+    for value in list_values_risk:
+        riskParam.risk_aversion.append(int(value))
+    return riskParam
+

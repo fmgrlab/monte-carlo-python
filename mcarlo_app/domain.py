@@ -56,6 +56,9 @@ class RiskParam(Param):
         self.strike = []
         self.iterations = 0
 
+        self.risk_aversion_display = ""
+        self.strike_display = ""
+
 class IterationParam(Param):
     def __init__(self):
         self.risk_aversion = 5
