@@ -67,7 +67,7 @@ class DataRender:
         plt.close(fig)
 
         ax2.grid(True, alpha=0.3)
-        ax2.set_xlabel('Iteration')
+        ax2.set_xlabel('Risk aversion')
         ax2.set_ylabel('Option price')
         ax2.set_title('Effects of risk aversion on put price')
         html_fig2 = mpld3.fig_to_html(fig2, template_type='general')
