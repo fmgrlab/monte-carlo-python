@@ -38,8 +38,8 @@ class Engine:
         st_dev = (1 / (iteration * (np.sum(r_mi) / iteration) ** 2)) * np.sum((payoff_temp - r_mi * (np.sum(payoff_temp) / iteration) / (np.sum(r_mi) / iteration)) ** 2)
         option.std_error = math.sqrt(st_dev) / math.sqrt(iteration)
 
-        option.confidence_down = cn - 1.96 * st_dev
-        option.confidence_up = cn + 1.96 * st_dev
+        option.confidence_down = cn - 1.96 * (math.sqrt(st_dev) / math.sqrt(iteration))
+        option.confidence_up = cn + 1.96 * (math.sqrt(st_dev) / math.sqrt(iteration))
         option.price = cn
         return option
 
@@ -52,8 +52,8 @@ class Engine:
         st_dev = (1 / (iteration * (np.sum(r_mi) / iteration) ** 2)) * np.sum((payoff_temp - r_mi * (np.sum(payoff_temp) / iteration) / (np.sum(r_mi) / iteration)) ** 2)
         option.std_error = math.sqrt(st_dev) / math.sqrt(iteration)
 
-        option.confidence_down = cn - 1.96 * st_dev
-        option.confidence_up = cn + 1.96 * st_dev
+        option.confidence_down = cn - 1.96 * (math.sqrt(st_dev) / math.sqrt(iteration))
+        option.confidence_up = cn + 1.96 * (math.sqrt(st_dev) / math.sqrt(iteration))
         option.price = cn
         return option
 
