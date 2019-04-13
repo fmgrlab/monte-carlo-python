@@ -35,11 +35,11 @@ class Engine:
         cn = np.sum(payoff_temp) / np.sum(r_mi)
         option = Option()
         option.price = cn
-        st_dev = (1 / (np.sum(r_mi) ** 2)) * np.sum((payoff_temp - r_mi * (np.sum(payoff_temp) / np.sum(r_mi))) ** 2)
+        st_dev = (1 / (iteration * (np.sum(r_mi) / iteration) ** 2)) * np.sum((payoff_temp - r_mi * (np.sum(payoff_temp) / iteration) / (np.sum(r_mi) / iteration)) ** 2)
         option.std_error = math.sqrt(st_dev) / math.sqrt(iteration)
 
-        option.confidence_down = cn - 1.96 * st_dev
-        option.confidence_up = cn + 1.96 * st_dev
+        option.confidence_down = cn - 1.96 * (math.sqrt(st_dev) / math.sqrt(iteration))
+        option.confidence_up = cn + 1.96 * (math.sqrt(st_dev) / math.sqrt(iteration))
         option.price = cn
         return option
 
@@ -49,11 +49,11 @@ class Engine:
         r_mi = (1 + market_returns) ** (1 - risk_aversion)
         cn = np.sum(payoff_temp) / np.sum(r_mi)
         option = Option()
-        st_dev = (1 / (np.sum(r_mi) ** 2)) * np.sum((payoff_temp - r_mi * (np.sum(payoff_temp) / np.sum(r_mi))) ** 2)
+        st_dev = (1 / (iteration * (np.sum(r_mi) / iteration) ** 2)) * np.sum((payoff_temp - r_mi * (np.sum(payoff_temp) / iteration) / (np.sum(r_mi) / iteration)) ** 2)
         option.std_error = math.sqrt(st_dev) / math.sqrt(iteration)
 
-        option.confidence_down = cn - 1.96 * st_dev
-        option.confidence_up = cn + 1.96 * st_dev
+        option.confidence_down = cn - 1.96 * (math.sqrt(st_dev) / math.sqrt(iteration))
+        option.confidence_up = cn + 1.96 * (math.sqrt(st_dev) / math.sqrt(iteration))
         option.price = cn
         return option
 
