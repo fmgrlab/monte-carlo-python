@@ -25,13 +25,13 @@ class DataRender:
             writer.writerow(['Number of steps ', output.param.number_of_step])
             writer.writerow("Effect of iteration on equilibrim option pricing")
             writer.writerow(
-                ['Strike price', 'Iteration', 'Call Price', ' Call sdt', 'Call Conf up', 'Conf bound down', 'Put Price',
-                 ' Put sdt ', 'Put Conf up', 'Puf conf down'])
+                ['Strike price', 'Iteration', 'Call Price', ' Call sdt',  'Conf bound down','Call Conf up', 'Put Price',
+                 ' Put sdt ',  'Puf conf down','Put Conf up',])
             for item in output.payoffs:
                 writer.writerow(
-                    [item.strike, item.iteration, val(item.call.price), val(item.call.std_error), val(item.call.confidence_up),
-                     val(item.call.confidence_down), val(item.put.price), val(item.put.std_error), val(item.put.confidence_up),
-                     val(item.put.confidence_down)])
+                    [item.strike, item.iteration, val(item.call.price), val(item.call.std_error), val(item.call.confidence_down),
+                     val(item.call.confidence_up), val(item.put.price), val(item.put.std_error), val(item.put.confidence_down),
+                     val(item.put.confidence_up)])
             return response
 
     def to_csv_risk(output, response):
@@ -51,15 +51,15 @@ class DataRender:
         writer.writerow(['Number of steps ', output.param.number_of_step])
         writer.writerow("Effect of risk aversion on equilibrium option pricing")
         writer.writerow(
-            ['Strike price', 'Risk aversion', 'Call Price', ' Call sdt', 'Call Conf up', 'Conf bound down', 'Put Price',
-             ' Put sdt ', 'Put Conf up', 'Puf conf down'])
+            ['Strike price', 'Risk aversion', 'Call Price', ' Call sdt',  'Call conf down','Call Conf up', 'Put Price',
+             ' Put sdt ',  'Puf conf down','Put Conf up'])
         for item in output.payoffs:
             writer.writerow(
                 [item.strike, item.risk_aversion, val(item.call.price), val(item.call.std_error),
-                 val(item.call.confidence_up),
-                 val(item.call.confidence_down), val(item.put.price), val(item.put.std_error),
-                 val(item.put.confidence_up),
-                 val(item.put.confidence_down)])
+                 val(item.call.confidence_down),
+                 val(item.call.confidence_up), val(item.put.price), val(item.put.std_error),
+                 val(item.put.confidence_down),
+                 val(item.put.confidence_up)])
         return response
 
     def to_graph_risk(payoffs, strikes):
@@ -221,26 +221,26 @@ class DataRender:
         writer.writerow(['Number of steps ', output.param.number_of_step])
         writer.writerow("Call")
         writer.writerow(
-            ['Strike price', 'Iteration', 'Vol const Price', ' Vol const sdt', 'Vol const Conf up', 'Vol const bound down', 'Vol sto Price',
-             ' Vol sto sdt ', 'Vol sto Conf up', 'Vol sto conf down'])
+            ['Strike price', 'Iteration', 'Vol const Price', ' Vol const sdt', 'Vol const Conf down', 'Vol const bound up', 'Vol sto Price',
+             ' Vol sto sdt ', 'Vol sto Conf down', 'Vol sto conf up'])
         for item in output.call:
             writer.writerow(
-                [item.strike, item.iteration, val(item.vol_const.price), val(item.vol_const.std_error), val(item.vol_const.confidence_up),
-                 val(item.vol_const.confidence_down), val(item.vol_stockas.price), val(item.vol_stockas.std_error), val(item.vol_stockas.confidence_up),
-                 val(item.vol_stockas.confidence_down)])
+                [item.strike, item.iteration, val(item.vol_const.price), val(item.vol_const.std_error), val(item.vol_const.confidence_down),
+                 val(item.vol_const.confidence_up), val(item.vol_stockas.price), val(item.vol_stockas.std_error), val(item.vol_stockas.confidence_down),
+                 val(item.vol_stockas.confidence_up)])
 
         writer.writerow("Put")
         writer.writerow(
-            ['Strike price', 'Iteration', 'Vol const Price', ' Vol const sdt', 'Vol const Conf up',
-             'Vol const bound down', 'Vol sto Price',
-             ' Vol sto sdt ', 'Vol sto Conf up', 'Vol sto conf down'])
+            ['Strike price', 'Iteration', 'Vol const Price', ' Vol const sdt', 'Vol const Conf down',
+             'Vol const bound up', 'Vol sto Price',
+             ' Vol sto sdt ', 'Vol sto Conf down', 'Vol sto conf up'])
         for item in output.put:
             writer.writerow(
                 [item.strike, item.iteration, val(item.vol_const.price), val(item.vol_const.std_error),
-                 val(item.vol_const.confidence_up),
-                 val(item.vol_const.confidence_down), val(item.vol_stockas.price), val(item.vol_stockas.std_error),
-                 val(item.vol_stockas.confidence_up),
-                 val(item.vol_stockas.confidence_down)])
+                 val(item.vol_const.confidence_down),
+                 val(item.vol_const.confidence_up), val(item.vol_stockas.price), val(item.vol_stockas.std_error),
+                 val(item.vol_stockas.confidence_down),
+                 val(item.vol_stockas.confidence_up)])
         return response
 
 class DataExtractor:
