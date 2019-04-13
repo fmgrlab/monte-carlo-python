@@ -45,12 +45,12 @@ class Param:
 
 class RiskParam(Param):
     def __init__(self):
-        self.risk_aversion = [1,3,5,10]
-        self.strike = [80,100,120]
-        self.iterations = 100000
+        self.risk_aversion = []
+        self.strike = []
+        self.iterations = 0
 
-        self.risk_aversion_display = "1,3,5,10"
-        self.strike_display = "80,100,120"
+        self.risk_aversion_display = ""
+        self.strike_display = ""
 
     def as_json(self):
        dict = super().as_json()
@@ -62,10 +62,10 @@ class RiskParam(Param):
 class IterationParam(Param):
     def __init__(self):
         self.risk_aversion = 5
-        self.strike = [80,100,120]
-        self.iterations = [1000,10000,100000]
-        self.iterations_display = "1000,10000,100000"
-        self.strike_display = "80,100,120"
+        self.strike = []
+        self.iterations = []
+        self.iterations_display = ""
+        self.strike_display = ""
 
     def as_json(self):
         dict = super().as_json()
@@ -77,8 +77,8 @@ class VolParam(Param):
     def __init__(self):
         self.risk_aversion = 5
         self.strike = 100
-        self.iterations = [1000,10000,100000]
-        self.iterations_display = "1000,10000,100000"
+        self.iterations = []
+        self.iterations_display = ""
 
     def as_json(self):
         dict = super().as_json()
