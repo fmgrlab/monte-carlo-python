@@ -10,7 +10,7 @@ class Engine:
     def compute_constant_volatility_path(self):
         volatility = []
         for i in range(0, self.param.number_of_step + 1):
-            volatility.append(selcalculate_call_pricef.param.volatility_initial)
+            volatility.append(self.param.volatility_initial)
         return volatility
 
     def compute_stock_volatility_path(self, number_iterations, rand):
@@ -19,13 +19,13 @@ class Engine:
          v_p = np.zeros_like(volatilities)
          v_p[0] = volatilities[0]
          sdt = math.sqrt(self.param.dt)
-         for t in range(1, self.param.number_of_step + 1):
-           ran = np.dot(self.matrix_correlation, rand[:, t])
+         for i in range(1, self.param.number_of_step + 1):
+           ran = np.dot(self.matrix_correlation, rand[:, i])
            kappa = self.param.volatility_speed
            theta = self.param.volatility_long
            sigma = self.param.volatility_sigma
-           v_p[t] = (v_p[t - 1] + kappa *(theta - np.maximum(0, v_p[t - 1])) * self.param.dt + np.sqrt(np.maximum(0, v_p[t - 1]) ) *sigma * ran[1] * sdt)
-           volatilities[t]= np.maximum(0, v_p[t])
+           v_p[i] = (v_p[i - 1] + kappa *(theta - np.maximum(0, v_p[i - 1])) * self.param.dt + np.sqrt(np.maximum(0, v_p[i - 1]) ) *sigma * ran[1] * sdt)
+           volatilities[i]= np.maximum(0, v_p[i])
          return volatilities
 
     def calculate_call_price(self,risk_aversion,market_prices,strike,stock_price,iteration):
