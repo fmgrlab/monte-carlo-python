@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Equilibrium option pricing: A Monte Carlo approach</title>
+
+    <meta name="description" content=" Numerical implementation of equilibrium option pricing: monte carlo approach">
+    <meta name="author" content="Ayten Fabricio Ali">
+
+    <link href="/static/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<style>
+h4{
+    background-image: url(images/header-bg.png);
+    color:#3498db;
+    font-size:22px;
+    padding-bottom:5px;
+    padding-top:5px;
+    margin:0 0 0px 0;
+    border-bottom:2px solid #007dab;
+}
+</style>
+
+
+<body onc>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <nav class="navbar navbar-default navbar-inverse" role="navigation">
+                <div class="navbar-header">
+
+                    <button type="button" class="navbar-toggle" data-toggle="collapse"
+                            data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span
+                            class="icon-bar"></span><span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/">FMGRLAB</a>
+                </div>
+
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+
+
+                    </ul>
+
+
+
+                    <ul class="nav navbar-nav navbar-right">
+                        {% block header %}
+                         <li>
+                            <a href="/about">About</a>
+                        </li>
+                        {% endblock %}
+
+
+                    </ul>
+                </div>
+
+            </nav>
+
+
+
+
+        </div>
+    </div>
+
+{% block content %}
+ <div class="page-header" style="margin: 1%">
+                <h4>
+                    By number of iteration
+                </h4>
+                <br>
+                 Numerical implementation of Hull White model using python
+                <p>
+                    The purpose of this website is to implement the interest rate model Hull- White one-factor using the trinomial methdo</div>
+            <br><br>
+</div>
+
+ <form role="form" name="computeForm" id="computeForm" method="post" action="/">
+            {% csrf_token %}
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group row">
+
+                                <div class="col-xs-1">
+                                    <label for="stock_initial">So</label>
+                                    <input class="form-control" name="stock_initial" id = "stock_initial" value="{{ param.stock_initial }}"
+                                           onkeypress="return isNumberKey(event)">
+                                </div>
+
+                                <div class="col-xs-1">
+                                    <label for="maturity">Maturity</label>
+                                    <input class="form-control" id="maturity" name="maturity"
+                                           value="{{ param.maturity }}" onkeypress="return isNumberKey(event)">
+                                </div>
+                                  <div class="col-xs-1">
+                                    <label for="step_number">N</label>
+                                    <input class="form-control" id="step_number" name="step_number"
+                                           value="{{ param.number_of_step }}" onkeypress="return isNumberKey(event)">
+                                </div>
+                                <div class="col-xs-1">
+                                    <label for="stock_return" lang="latex">\mu_s</label>
+                                    <input class="form-control" id="stock_return" name="stock_return"
+                                           value="{{ param.stock_return }}">
+                                </div>
+                                 <div class="col-xs-1">
+                                    <label for="market_return" lang="latex">\mu_m</label>
+                                    <input class="form-control" id="market_return" name="market_return"
+                                           value="{{ param.market_return }}" onchange="addInput()" onkeypress="return isNumberKey(event)">
+                                </div>
+                                 <div class="col-xs-1">
+                                    <label for="volatility_speed" lang="latex">\kappa</label>
+                                    <input class="form-control" id="volatility_speed" name="volatility_speed"
+                                           value="{{ param.volatility_speed }}" onchange="addInput()" onkeypress="return isNumberKey(event)">
+                                </div>
+                                 <div class="col-xs-1">
+                                    <label for="volatility_long" lang="latex">\theta</label>
+                                    <input class="form-control" id="volatility_long" name="volatility_long"
+                                           value="{{ param.volatility_long }}" onchange="addInput()" onkeypress="return isNumberKey(event)">
+                                </div>
+                                 <div class="col-xs-1">
+                                    <label for="volatility_initial" lang="latex" >V_0</label>
+                                    <input class="form-control" id="volatility_initial" name="volatility_initial"
+                                           value="{{ param.volatility_initial }}" onchange="addInput()" onkeypress="return isNumberKey(event)">
+                                </div>
+                                 <div class="col-xs-1">
+                                    <label for="volatility_sigma"  lang="latex">\sigma_v</label>
+                                    <input class="form-control" id="volatility_sigma" name="volatility_sigma"
+                                           value="{{ param.volatility_sigma }}" onchange="addInput()" onkeypress="return isNumberKey(event)">
+                                </div>
+                                <div class="col-xs-1">
+                                    <label for="market_volatility"  lang="latex">\sigma_m</label>
+                                    <input class="form-control" id="market_volatility" name="market_volatility"
+                                           value="{{ param.market_volatility }}">
+                                </div>
+                                <div class="col-xs-1">
+                                    <label for="maturity">b</label>
+                                    <input class="form-control" id="b" name="b"
+                                           value="{{ param.b }}" onchange="addInput()"  pattern="([0-9]+\.)?[0-9]+" >
+                                </div>
+                                 <div class="col-xs-1">
+                                    <label for="correlation_stock_volatility" lang="latex">\rho_{sv}</label>
+                                    <input class="form-control" id="correlation_stock_volatility" name="correlation_stock_volatility"
+                                           value="{{ param.correlation_stock_volatility }}"  pattern="([0-9]+\.)?[0-9]+" >
+                                </div>
+                                <div class="col-xs-1">
+                                    <label for="correlation_stock_market" lang="latex">\rho_{sm}</label>
+                                    <input class="form-control" id="correlation_stock_market" name="correlation_stock_market"
+                                           value="{{ param.correlation_stock_market }}" onchange="addInput()" onkeypress="return isNumberKey(event)">
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                    <div class="row" style="margin: 20px">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-6">
+                            <input type="submit" class="btn btn-block  btn-primary" id="exampleInputEmail1"/>
+                        </div>
+                        <div class="col-md-3"></div>
+                    </div>
+                    <div lang="latex">
+
+</div>
+                </div>
+            </form>
+
+
+<div class="row" style=" margin: 1%; padding: 10px;border: 1px solid #8c8c8c;min-height: 15cm;overflow-x: scroll">
+
+        <div style="display: flex; justify-content: center;">{{ graph|safe }}</div>
+
+    </div>
+
+    <div class="row" style=" margin: 1%; padding: 1px;overflow-y: scroll;min-height: 15cm">
+
+        <table cellpadding="5" class="table table-bordered table-hover table-condensed">
+           <th>Price</th>
+            <th>Standard Error</th>
+            <th>Price</th>
+            <th>Standard Error</th>
+            <th>Price</th>
+            <th>Standard Error</th>
+        </table>
+
+
+    </div>
+
+
+{% endblock %}
+
+<script src="/static/jquery.min.js"></script>
+<script src="/static/bootstrap.min.js"></script>
+<script type="text/javascript" src="http://latex.codecogs.com/latexit.js"></script>
+
+<scr/>
+
+</body>
+</html>

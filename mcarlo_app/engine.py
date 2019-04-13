@@ -1,6 +1,10 @@
-import  math
-import  numpy as np
-from mcarlo_app.domain import Payoff,Option
+import math
+
+import numpy as np
+
+from mcarlo_app.domain import Payoff, Option
+
+
 class Engine:
 
     def __init__(self, param):

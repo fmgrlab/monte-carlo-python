@@ -1,33 +1,30 @@
-{% extends "home.html" %}
+{% extends "base.html" %}
 
- {% block header %}
+{% block header %}
 <li>
-    <a href="iteration">By iteration</a>
+    <a href="volatility">By volatility</a>
 </li>
 <li>
     <a href="risk">By risk aversion</a>
 </li>
-
 {% endblock %}
 
 {% block content %}
- <div class="page-header" style="margin: 1%">
-                <h4>
-                     Effects of stochastic volatility on option prices
-                </h4>
-     <br>
-                  <p align="justify">
-                                In the <b>Volatility</b> option, we compare how different types of volatility (constant and stochastic)
-                                can affect the option prices.
+<div class="page-header" style="margin: 1%">
+    <h4>
+        Effects of number of iteration on option prices
+    </h4><br>
+    <p align="justify">
+                                In the <b>Iterations</b> option, we can check how different numbers of simulation iterations can affect
+                                the option prices given by the model.
                             </p>
-                            <p align="justify">
-                                Overall, we concluded that a stochastic volatility generates increased prices of
-                                In-The-Money (ITM) call options and decreases the prices of Out-The-Money (OTM) call options.
-                                Having an the opposite effect in put options.
-                            </p>
+     As showed in the results, analyzing the standard errors, we find that the model
+                                has an O(&radic;<span style="text-decoration: overline">n</span>) convergence rate.
+                                Also, we can see that the standard errors decrease with increasing the iterations number.
+    <br>
 </div>
 
-<form role="form" name="computeForm" id="computeForm" method="get" action="/volatility">
+<form role="form" name="computeForm" id="computeForm" method="get" action="/iteration">
     <div class="container-fluid">
         <div class="row" style="margin:1%">
             <div class="form-group row">
@@ -47,7 +44,7 @@
                            value="{{ param.market_return }}"  pattern="([0-9]+\.)?[0-9]+">
                 </div>
                 <div class="col-xs-1">
-                    <label for="market_return" lang="latex">\mu_m</label>
+                    <label for="market_return" lang="latex">\mu_M</label>
                     <input class="form-control" id="market_return" name="market_return"
                            value="{{ param.market_return }}"  pattern="([0-9]+\.)?[0-9]+">
                 </div>
@@ -73,7 +70,7 @@
                            value="{{ param.volatility_sigma }}"  pattern="([0-9]+\.)?[0-9]+">
                 </div>
                 <div class="col-xs-1">
-                    <label for="market_volatility" lang="latex">\sigma_m</label>
+                    <label for="market_volatility" lang="latex">\sigma_M</label>
                     <input class="form-control" id="market_volatility" name="market_volatility"
                            value="{{ param.market_volatility }}"  pattern="([0-9]+\.)?[0-9]+">
                 </div>
@@ -84,7 +81,7 @@
                            value="{{ param.correlation_stock_volatility }}" pattern="(^-?[0-9]+\.)?[0-9]+">
                 </div>
                 <div class="col-xs-1">
-                    <label for="correlation_stock_market" lang="latex">\rho_{sm}</label>
+                    <label for="correlation_stock_market" lang="latex">\rho_{sM}</label>
                     <input class="form-control" id="correlation_stock_market" name="correlation_stock_market"
                            value="{{ param.correlation_stock_market }}"  pattern="(^-?[0-9]+\.)?[0-9]+">
                 </div>
@@ -108,9 +105,9 @@
                            value="{{ param.risk_aversion }}" pattern="([0-9]+\.)?[0-9]+">
                 </div>
                 <div class="col-xs-2">
-                    <label for="strike">Strike</label>
+                    <label for="strike">Strikes</label>
                     <input class="form-control" id="strike" name="strike"
-                           value="{{ param.strike }}" pattern="([0-9]+\.)?[0-9]+">
+                           value="{{ param.strike_display }}">
                 </div>
                  <div class="col-xs-4">
                     <label for="iterations">Iterations</label>
@@ -138,29 +135,36 @@
             </div>
     </div>
 </form>
-<br><br>
+
 {% if output %}
-<h4 style=" margin: 1%">Call</h4>
-<div class="row" style=" margin: 1%; padding: 10px;min-height: 15cm">
-     <div class="col-md-6">
-         <div style="display: flex; justify-content: center;">{{ graph_call|safe }}</div>
-     </div>
-     <div class="col-md-6">
-         <br>
-         <table cellpadding="5" class="table table-bordered table-hover table-condensed">
+<div class="row" style="border: 1px solid #8c8c8c;margin:1%">
+
+    <div class="col-md-6">
+        <h5>Call</h5>
+        <div>{{ graph_call|safe }}</div>
+    </div>
+    <div class="col-md-6">
+        <h5>Put</h5>
+        <div>{{ graph_put|safe }}</div>
+    </div>
+</div>
+
+<div class="row" style="margin:1%">
+
+    <table cellpadding="5" class="table table-bordered table-hover table-condensed">
         <thead>
         <tr>
-             <th colspan="2"></th>
-            <th colspan="4" style="border-bottom-color:red;text-align:center">Constant volatility</th>
-            <th colspan="4" style="border-bottom-color:#3531ff;text-align:center">Stochastic volatility</th>
+            <th colspan="2"></th>
+            <th colspan="4" style="border-bottom-color:red;text-align:center">Option Call</th>
+            <th colspan="4" style="border-bottom-color:#3531ff;text-align:center">Option Put</th>
         </tr>
         <tr>
             <th>Strike</th>
             <th>Iteration</th>
+            <th>Price</th>
             <th>Std</th>
             <th>Conf up</th>
             <th>Conf Down</th>
-            <th>Price</th>
             <th>Price</th>
             <th>Std Error</th>
             <th>Conf Up</th>
@@ -168,7 +172,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for item,item_constant  in output %}
+        {% for item in output.payoffs %}
         <tr>
             <td>
                 {{ item.strike }}
@@ -176,7 +180,9 @@
             <td>
                 {{ item.iteration}}
             </td>
-
+            <td>
+                {{ item.call.price|floatformat:4 }}
+            </td>
             <td>
                 {{ item.call.std_error|floatformat:4 }}
             </td>
@@ -186,65 +192,8 @@
             <td>
                 {{ item.call.confidence_down|floatformat:4 }}
             </td>
-             <td class="bg-primary">
-                {{ item.call.price|floatformat:4 }}
-            </td>
-            <td style="border-left-color:#3531ff" class="bg-info">
-                {{ item_constant.call.price|floatformat:4 }}
-            </td>
-            <td>
-                {{ item_constant.call.std_error|floatformat:4 }}
-            </td>
-            <td>
-                {{ item_constant.call.confidence_up|floatformat:4 }}
-            </td>
-            <td>
-                {{ item_constant.call.confidence_down|floatformat:4 }}
-            </td>
-        </tr>
-        {% endfor %}
-
-    </table>
-     </div>
-</div>
-
-<br><br>
-<h4 style=" margin: 1%">Option Put</h4>
-<div class="row" style=" margin: 1%; padding: 10px;min-height: 15cm">
-     <div class="col-md-6">
-         <div style="display: flex; justify-content: center;">{{graph_put |safe }}</div>
-     </div>
-     <div class="col-md-6">
-         <br>
-         <table cellpadding="5" class="table table-bordered table-hover table-condensed">
-        <thead>
-        <tr>
-            <th colspan="2"></th>
-            <th colspan="4" style="border-bottom-color:red;text-align:center">Constant volatility</th>
-            <th colspan="4" style="border-bottom-color:#3531ff;text-align:center"> Stochastic volatility</th>
-        </tr>
-        <tr>
-            <th>Strike</th>
-            <th>Iteration</th>
-
-            <th>Std</th>
-            <th>Conf up</th>
-            <th>Conf Down</th>
-             <th>Price</th>
-            <th>Price</th>
-            <th>Std Error</th>
-            <th>Conf Up</th>
-            <th>Conf Down</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for item,item_constant in output_put %}
-        <tr>
-            <td>
-                {{ item.strike }}
-            </td>
-            <td>
-                {{ item.iteration}}
+            <td style="border-left-color:#3531ff">
+                {{ item.put.price|floatformat:4 }}
             </td>
             <td>
                 {{ item.put.std_error|floatformat:4 }}
@@ -255,28 +204,15 @@
             <td>
                 {{ item.put.confidence_down|floatformat:4 }}
             </td>
-            <td class="bg-info">
-                {{ item.put.price|floatformat:4 }}
-            </td>
-            <td style="border-left-color:#3531ff" class="bg-primary">
-                {{ item_constant.put.price|floatformat:4 }}
-            </td>
-            <td>
-                {{ item_constant.put.std_error|floatformat:4 }}
-            </td>
-            <td>
-                {{ item_constant.put.confidence_up|floatformat:4 }}
-            </td>
-            <td>
-                {{ item_constant.put.confidence_down|floatformat:4 }}
-            </td>
         </tr>
         {% endfor %}
 
     </table>
-     </div>
+
+
 </div>
 {% endif %}
+
 {% endblock %}
 
 

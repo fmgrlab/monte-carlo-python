@@ -1,11 +1,10 @@
-from mcarlo_app.domain import  *
-from mcarlo_app.engine import Engine
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import render
-from pylab import *
-from mcarlo_app.param_handler import parse_param_iteration, parse_param_risk,parse_param_volatility
-from mcarlo_app.output_render import DataRender
+
+from mcarlo_app.data_utils import DataRender, DataExtractor
+from mcarlo_app.domain import *
+from mcarlo_app.engine import Engine
 
 
 def home(request):
@@ -14,18 +13,10 @@ def home(request):
 def about(request):
     return render(request,'about.html')
 
-def handler404(request):
-    return render(request, '404.html', status=404)
-def handler500(request):
-    return render(request, '500.html', status=500)
-def handler504(request):
-    return render(request, '504.html', status=504)
-
-
 def demo_iteration(request):
-    iterationParam = parse_param_iteration(request)
+    iterationParam = DataExtractor.parse_param_iteration(request)
     if 'show_cvs' not in request.GET and 'show_api' not in request.GET and 'show_graph' not in request.GET:
-         return render(request, 'mcarlo_iteration.html', {'param': iterationParam})
+         return render(request, 'iteration.html', {'param': iterationParam})
     engine = Engine(param=iterationParam)
     strikes = iterationParam.strike
     risk_aversion = iterationParam.risk_aversion
@@ -41,11 +32,11 @@ def demo_iteration(request):
         return JsonResponse(output.as_json())
     if 'show_graph' in request.GET:
         call_graph, graph_put = DataRender.to_graph_iteration(payoffs, strikes)
-        return render(request,'mcarlo_iteration.html',{'param': iterationParam, 'output':output,'graph_put': graph_put,'graph_call': call_graph})
+        return render(request,'iteration.html',{'param': iterationParam, 'output':output,'graph_put': graph_put,'graph_call': call_graph})
 
 
 def demo_risk(request):
-    riskParam = parse_param_risk(request)
+    riskParam = DataExtractor.parse_param_risk(request)
     if 'show_cvs' not in request.GET and 'show_api' not in request.GET and 'show_graph' not in request.GET:
         return render(request, 'mcarlo_risk.html', {'param': riskParam})
     strikes = riskParam.strike
@@ -67,7 +58,7 @@ def demo_risk(request):
 
 
 def demo_volatility(request):
-    param = parse_param_volatility(request)
+    param = DataExtractor.parse_param_volatility(request)
     if 'show_cvs' not in request.GET and 'show_api' not in request.GET and 'show_graph' not in request.GET:
         return render(request, 'mcarlo_volatility.html', {'param': param})
     engine = Engine(param=param)
