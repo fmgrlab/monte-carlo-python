@@ -8,7 +8,7 @@ from mcarlo_app.engine import Engine
 
 
 def home(request):
-    return render(request,'index.html')
+    return render(request,'home.html')
 
 def about(request):
     return render(request,'about.html')
@@ -38,7 +38,7 @@ def demo_iteration(request):
 def demo_risk(request):
     riskParam = DataExtractor.parse_param_risk(request)
     if 'show_cvs' not in request.GET and 'show_api' not in request.GET and 'show_graph' not in request.GET:
-        return render(request, 'mcarlo_risk.html', {'param': riskParam})
+        return render(request, 'risk.html', {'param': riskParam})
     strikes = riskParam.strike
     risk_aversions = riskParam.risk_aversion
     iteration = riskParam.iterations
@@ -49,18 +49,18 @@ def demo_risk(request):
     if 'show_cvs' in request.GET:
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="monte-carlo-effect-risk.csv"'
-        return DataRender.to_csv(output,response)
+        return DataRender.to_csv_risk(output,response)
     if 'show_api' in request.GET:
         return JsonResponse(output.as_json())
     if 'show_graph' in request.GET:
         call_graph, graph_put = DataRender.to_graph_risk(payoffs, strikes)
-        return render(request,'mcarlo_risk.html',{'param': riskParam, 'output':output,'graph_put': graph_put,'graph_call': call_graph})
+        return render(request,'risk.html',{'param': riskParam, 'output':output,'graph_put': graph_put,'graph_call': call_graph})
 
 
 def demo_volatility(request):
     param = DataExtractor.parse_param_volatility(request)
     if 'show_cvs' not in request.GET and 'show_api' not in request.GET and 'show_graph' not in request.GET:
-        return render(request, 'mcarlo_volatility.html', {'param': param})
+        return render(request, 'volatility.html', {'param': param})
     engine = Engine(param=param)
     number_of_iterations = param.iterations
     payoff_vol_stoch, payoff_vol_constant = engine.compute_payoff_by_volatility(number_of_iterations,param.strike,param.risk_aversion)
@@ -76,6 +76,6 @@ def demo_volatility(request):
     output_put = zip(payoff_vol_stoch, payoff_vol_constant)
     if 'show_graph' in request.GET:
         call_graph, graph_put = DataRender.to_graph_volatility(payoff_vol_stoch, payoff_vol_constant)
-        return render(request, 'mcarlo_volatility.html',{'param': param, 'output': output, 'output_put': output_put, 'graph_put': graph_put,'graph_call': call_graph})
-    return render(request,'mcarlo_volatility.html',{'param': param})
+        return render(request, 'volatility.html',{'param': param, 'output': output, 'output_put': output_put, 'graph_put': graph_put,'graph_call': call_graph})
+    return render(request,'volatility.html',{'param': param})
 

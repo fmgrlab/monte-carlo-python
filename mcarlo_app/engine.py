@@ -1,9 +1,6 @@
 import math
-
 import numpy as np
-
 from mcarlo_app.domain import Payoff, Option
-
 
 class Engine:
 
@@ -20,45 +17,43 @@ class Engine:
     def compute_stock_volatility_path(self, number_iterations, rand):
          volatilities = np.zeros((self.param.number_of_step + 1, number_iterations), dtype=np.float)
          volatilities[0] = self.param.volatility_initial
-         v_p = np.zeros_like(volatilities)
-         v_p[0] = volatilities[0]
+         tmp_vol = np.zeros_like(volatilities)
+         tmp_vol[0] = volatilities[0]
          sdt = math.sqrt(self.param.dt)
          for i in range(1, self.param.number_of_step + 1):
            ran = np.dot(self.matrix_correlation, rand[:, i])
            kappa = self.param.volatility_speed
            theta = self.param.volatility_long
            sigma = self.param.volatility_sigma
-           v_p[i] = (v_p[i - 1] + kappa *(theta - np.maximum(0, v_p[i - 1])) * self.param.dt + np.sqrt(np.maximum(0, v_p[i - 1]) ) *sigma * ran[1] * sdt)
-           volatilities[i]= np.maximum(0, v_p[i])
+           tmp_vol[i] = (tmp_vol[i - 1] + kappa *(theta - np.maximum(0, tmp_vol[i - 1])) * self.param.dt + np.sqrt(np.maximum(0, tmp_vol[i - 1]) ) *sigma * ran[1] * sdt)
+           volatilities[i]= np.maximum(0, tmp_vol[i])
          return volatilities
 
     def calculate_call_price(self,risk_aversion,market_prices,strike,stock_price,iteration):
         market_returns = market_prices[self.param.number_of_step][:] / market_prices[0][:] - 1
         payoff_temp = np.maximum(stock_price[-1] - strike, 0) / (1 + market_returns) ** risk_aversion
-        r_mi = (1 + market_returns) ** (1 - risk_aversion)
-        cn = np.sum(payoff_temp) / np.sum(r_mi)
+        return_m = (1 + market_returns) ** (1 - risk_aversion)
         option = Option()
-        option.price = cn
-        st_dev = (1 / (iteration * (np.sum(r_mi) / iteration) ** 2)) * np.sum((payoff_temp - r_mi * (np.sum(payoff_temp) / iteration) / (np.sum(r_mi) / iteration)) ** 2)
+        option.price = np.sum(payoff_temp) / np.sum(return_m)
+        st_dev = (1 / (iteration * (np.sum(return_m) / iteration) ** 2)) * np.sum((payoff_temp - return_m * (np.sum(payoff_temp) / iteration) / (np.sum(return_m) / iteration)) ** 2)
         option.std_error = math.sqrt(st_dev) / math.sqrt(iteration)
-
-        option.confidence_down = cn - 1.96 * (math.sqrt(st_dev) / math.sqrt(iteration))
-        option.confidence_up = cn + 1.96 * (math.sqrt(st_dev) / math.sqrt(iteration))
-        option.price = cn
+        option.confidence_down = option.price - 1.96 * (math.sqrt(st_dev) / math.sqrt(iteration))
+        option.confidence_up = option.price + 1.96 * (math.sqrt(st_dev) / math.sqrt(iteration))
+        option.price = option.price
         return option
 
     def calculate_put_price(self,risk_aversion,market_prices,strike,stock_price,iteration):
         market_returns = market_prices[self.param.number_of_step][:] / market_prices[0][:] - 1
         payoff_temp = np.maximum(strike -stock_price[-1], 0) / (1 + market_returns) ** risk_aversion
-        r_mi = (1 + market_returns) ** (1 - risk_aversion)
-        cn = np.sum(payoff_temp) / np.sum(r_mi)
+        return_m = (1 + market_returns) ** (1 - risk_aversion)
         option = Option()
-        st_dev = (1 / (iteration * (np.sum(r_mi) / iteration) ** 2)) * np.sum((payoff_temp - r_mi * (np.sum(payoff_temp) / iteration) / (np.sum(r_mi) / iteration)) ** 2)
+        option.price = np.sum(payoff_temp) / np.sum(return_m)
+        st_dev = (1 / (iteration * (np.sum(return_m) / iteration) ** 2)) * np.sum((payoff_temp - return_m * (np.sum(payoff_temp) / iteration) / (np.sum(return_m) / iteration)) ** 2)
         option.std_error = math.sqrt(st_dev) / math.sqrt(iteration)
 
-        option.confidence_down = cn - 1.96 * (math.sqrt(st_dev) / math.sqrt(iteration))
-        option.confidence_up = cn + 1.96 * (math.sqrt(st_dev) / math.sqrt(iteration))
-        option.price = cn
+        option.confidence_down = option.price  - 1.96 * (math.sqrt(st_dev) / math.sqrt(iteration))
+        option.confidence_up = option.price  + 1.96 * (math.sqrt(st_dev) / math.sqrt(iteration))
+        option.price = option.price
         return option
 
     def calculate_payoff(self, iteration,strike,b):
@@ -136,8 +131,7 @@ class Engine:
         return market_price
 
     def generate_random_by_step(self, number_iterations):
-        rand =  np.random.standard_normal((3, self.param.number_of_step + 1, number_iterations))
-        return (rand)
+        return np.random.standard_normal((3, self.param.number_of_step + 1, number_iterations))
 
     def generate_covariance(self):
         covariance_matrix = np.zeros((3, 3))

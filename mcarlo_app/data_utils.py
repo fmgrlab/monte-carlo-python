@@ -29,10 +29,38 @@ class DataRender:
                  ' Put sdt ', 'Put Conf up', 'Puf conf down'])
             for item in output.payoffs:
                 writer.writerow(
-                    [item.strike, item.iteration, item.call.price, item.call.std_error, item.call.confidence_up,
-                     item.call.confidence_down, item.put.price, item.put.std_error, item.put.confidence_up,
-                     item.put.confidence_down])
+                    [item.strike, item.iteration, val(item.call.price), val(item.call.std_error), val(item.call.confidence_up),
+                     val(item.call.confidence_down), val(item.put.price), val(item.put.std_error), val(item.put.confidence_up),
+                     val(item.put.confidence_down)])
             return response
+
+    def to_csv_risk(output, response):
+        writer = csv.writer(response)
+        writer.writerow(['Stock initial', output.param.stock_initial])
+        writer.writerow(['Stock return', output.param.stock_return])
+        writer.writerow(['Correlation stock volatility', output.param.correlation_stock_volatility])
+        writer.writerow(['Correlation stock market', output.param.correlation_stock_market])
+        writer.writerow(['Volatility initial', output.param.volatility_initial])
+        writer.writerow(['Volatility sigma', output.param.volatility_sigma])
+        writer.writerow(['Volatility speed', output.param.volatility_speed])
+        writer.writerow(['Volatility long', output.param.volatility_long])
+        writer.writerow(['Market return ', output.param.market_return])
+        writer.writerow(['Volatility sigma', output.param.market_volatility])
+        writer.writerow(['Risk aversion ', output.param.risk_aversion])
+        writer.writerow(['Maturity', output.param.maturity])
+        writer.writerow(['Number of steps ', output.param.number_of_step])
+        writer.writerow("Effect of risk aversion on equilibrium option pricing")
+        writer.writerow(
+            ['Strike price', 'Risk aversion', 'Call Price', ' Call sdt', 'Call Conf up', 'Conf bound down', 'Put Price',
+             ' Put sdt ', 'Put Conf up', 'Puf conf down'])
+        for item in output.payoffs:
+            writer.writerow(
+                [item.strike, item.risk_aversion, val(item.call.price), val(item.call.std_error),
+                 val(item.call.confidence_up),
+                 val(item.call.confidence_down), val(item.put.price), val(item.put.std_error),
+                 val(item.put.confidence_up),
+                 val(item.put.confidence_down)])
+        return response
 
     def to_graph_risk(payoffs, strikes):
         fig, ax = plt.subplots(figsize=(6, 5), sharex=True)
@@ -197,9 +225,9 @@ class DataRender:
              ' Vol sto sdt ', 'Vol sto Conf up', 'Vol sto conf down'])
         for item in output.call:
             writer.writerow(
-                [item.strike, item.iteration, item.vol_const.price, item.vol_const.std_error, item.vol_const.confidence_up,
-                 item.vol_const.confidence_down, item.vol_stockas.price, item.vol_stockas.std_error, item.vol_stockas.confidence_up,
-                 item.vol_stockas.confidence_down])
+                [item.strike, item.iteration, val(item.vol_const.price), val(item.vol_const.std_error), val(item.vol_const.confidence_up),
+                 val(item.vol_const.confidence_down), val(item.vol_stockas.price), val(item.vol_stockas.std_error), val(item.vol_stockas.confidence_up),
+                 val(item.vol_stockas.confidence_down)])
 
         writer.writerow("Put")
         writer.writerow(
@@ -208,11 +236,11 @@ class DataRender:
              ' Vol sto sdt ', 'Vol sto Conf up', 'Vol sto conf down'])
         for item in output.put:
             writer.writerow(
-                [item.strike, item.iteration, item.vol_const.price, item.vol_const.std_error,
-                 item.vol_const.confidence_up,
-                 item.vol_const.confidence_down, item.vol_stockas.price, item.vol_stockas.std_error,
-                 item.vol_stockas.confidence_up,
-                 item.vol_stockas.confidence_down])
+                [item.strike, item.iteration, val(item.vol_const.price), val(item.vol_const.std_error),
+                 val(item.vol_const.confidence_up),
+                 val(item.vol_const.confidence_down), val(item.vol_stockas.price), val(item.vol_stockas.std_error),
+                 val(item.vol_stockas.confidence_up),
+                 val(item.vol_stockas.confidence_down)])
         return response
 
 class DataExtractor:
@@ -276,3 +304,6 @@ class DataExtractor:
         for value in list_values_iteration:
             volparam.iterations.append(int(value))
         return volparam
+
+def val(value):
+    return round(value, 4)

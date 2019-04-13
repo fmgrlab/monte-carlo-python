@@ -1,5 +1,5 @@
 from collections import OrderedDict
-
+from mcarlo_app import data_utils
 
 
 
@@ -53,7 +53,7 @@ class RiskParam(Param):
         self.strike_display = "80,100,120"
 
     def as_json(self):
-       dict = super(Param, self).as_json()
+       dict = super().as_json()
        dict['risk_aversion'] = self.risk_aversion_display
        dict['strike'] = self.strike_display
        dict['iterations'] = self.iterations
@@ -68,7 +68,7 @@ class IterationParam(Param):
         self.strike_display = "80,100,120"
 
     def as_json(self):
-        dict = super(Param, self).as_json()
+        dict = super().as_json()
         dict['risk_aversion'] = self.risk_aversion
         dict['strike'] = self.strike_display
         dict['iterations'] = self.iterations_display
@@ -81,7 +81,7 @@ class VolParam(Param):
         self.iterations_display = "1000,10000,100000"
 
     def as_json(self):
-        dict = super(Param, self).as_json()
+        dict = super().as_json()
         dict['risk_aversion'] = self.risk_aversion
         dict['strike'] = self.strike
         dict['iterations'] = self.iterations_display
@@ -97,10 +97,10 @@ class Option:
 
     def as_json(self):
         dict = OrderedDict()
-        dict['price'] = self.price
-        dict['std_error'] = self.std_error
-        dict['confidence_up'] = self.confidence_up
-        dict['confidence_down'] = self.confidence_down
+        dict['price'] = data_utils.val(self.price)
+        dict['std_error'] = data_utils.val(self.std_error)
+        dict['confidence_up'] = data_utils.val(self.confidence_up)
+        dict['confidence_down'] = data_utils.val(self.confidence_down)
         return dict
 
 class Payoff:
