@@ -75,16 +75,18 @@ class IterationParam(Param):
 
 class VolParam(Param):
     def __init__(self):
-        self.risk_aversion = 5
-        self.strike = 100
-        self.iterations = []
-        self.iterations_display = ""
+        self.strike = []
+        self.risk_aversion = []
+
+        self.iterations = 10000
+        self.strike_display = ""
+        self.aversion_display = ""
 
     def as_json(self):
         dict = super().as_json()
-        dict['risk_aversion'] = self.risk_aversion
-        dict['strike'] = self.strike
-        dict['iterations'] = self.iterations_display
+        dict['risk_aversion'] = self.aversion_display
+        dict['strike'] = self.strike_display
+        dict['iterations'] = self.iterations
 
 
 class Option:

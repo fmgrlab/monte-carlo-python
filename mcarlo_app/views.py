@@ -59,10 +59,11 @@ def demo_risk(request):
 
 def demo_volatility(request):
     param = DataExtractor.parse_param_volatility(request)
+    print(param.as_json())
     if 'show_cvs' not in request.GET and 'show_api' not in request.GET and 'show_graph' not in request.GET:
         return render(request, 'volatility.html', {'param': param})
     engine = Engine(param=param)
-    number_of_iterations = param.iterations
+    number_of_iterations = 10000
     payoff_vol_stoch, payoff_vol_constant = engine.compute_payoff_by_volatility(number_of_iterations,param.strike,param.risk_aversion)
     json = DataRender.to_json(payoff_vol_stoch, payoff_vol_constant, param)
     if 'show_cvs' in request.GET:
@@ -75,7 +76,7 @@ def demo_volatility(request):
     output = zip(payoff_vol_stoch, payoff_vol_constant)
     output_put = zip(payoff_vol_stoch, payoff_vol_constant)
     if 'show_graph' in request.GET:
-        call_graph, graph_put = DataRender.to_graph_volatility(payoff_vol_stoch, payoff_vol_constant)
+        call_graph, graph_put = DataRender.to_graph_volatility(payoff_vol_stoch, payoff_vol_constant, param.strike)
         return render(request, 'volatility.html',{'param': param, 'output': output, 'output_put': output_put, 'graph_put': graph_put,'graph_call': call_graph})
     return render(request,'volatility.html',{'param': param})
 

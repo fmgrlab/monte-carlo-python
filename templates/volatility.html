@@ -103,19 +103,19 @@
                            value="{{ param.number_of_step }}">
                 </div>
                  <div class="col-xs-2">
-                    <label for="maturity">Risk Aversion</label>
+                    <label for="maturity">Risk Aversions</label>
                     <input class="form-control" id="risk_aversion" name="risk_aversion"
-                           value="{{ param.risk_aversion }}" pattern="([0-9]+\.)?[0-9]+">
+                           value="{{ param.risk_aversion_display }}">
                 </div>
                 <div class="col-xs-2">
-                    <label for="strike">Strike</label>
+                    <label for="strike">Strikes</label>
                     <input class="form-control" id="strike" name="strike"
-                           value="{{ param.strike }}" pattern="([0-9]+\.)?[0-9]+">
+                           value="{{ param.strike_display }}">
                 </div>
                  <div class="col-xs-4">
-                    <label for="iterations">Iterations</label>
+                    <label for="iterations">Iteration</label>
                     <input class="form-control" id="iterations" name="iterations"
-                           value="{{ param.iterations_display }}">
+                           value="{{ param.iterations }}" pattern="([0-9]+\.)?[0-9]+">
                 </div>
                  <div class="col-xs-1"></div>
             </div>
@@ -156,7 +156,7 @@
         </tr>
         <tr>
             <th>Strike</th>
-            <th>Iteration</th>
+            <th>Risk Aversion</th>
             <th>Std</th>
             <th>Conf up</th>
             <th>Conf Down</th>
@@ -174,7 +174,7 @@
                 {{ item.strike }}
             </td>
             <td>
-                {{ item.iteration}}
+                {{ item.risk_aversion}}
             </td>
 
             <td>
@@ -225,7 +225,7 @@
         </tr>
         <tr>
             <th>Strike</th>
-            <th>Iteration</th>
+            <th>Risk Aversion</th>
 
             <th>Std</th>
             <th>Conf up</th>
@@ -244,7 +244,7 @@
                 {{ item.strike }}
             </td>
             <td>
-                {{ item.iteration}}
+                {{ item.risk_aversion}}
             </td>
             <td>
                 {{ item.put.std_error|floatformat:4 }}

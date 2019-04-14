@@ -75,19 +75,19 @@ class Engine:
         payoffs.sort(key=lambda payoff: payoff.strike)
         return  payoffs
 
-    def compute_payoff_by_volatility(self,number_of_iterations,strike, risk_aversion):
+    def compute_payoff_by_volatility(self,iteration,strikes, risk_aversions):
         payoffs_vol_constant = []
         payoffs_vol_stochastic = []
-        for iteration in number_of_iterations:
+        for strike in strikes:
             rand = self.generate_random_by_step(iteration)
             market_price = self.compute_market_path(iteration, rand)
             volatility = self.compute_stock_volatility_path(iteration, rand)
-            payoff = self.compute_stock_path(volatility, market_price, iteration, strike, risk_aversion, rand)
-            payoffs_vol_stochastic.append(payoff)
-
-            volatility_constant = self.compute_constant_volatility_path()
-            payoff_c = self.compute_stock_path(volatility_constant, market_price, iteration, strike, risk_aversion, rand)
-            payoffs_vol_constant.append(payoff_c)
+            for risk_aversion in risk_aversions:
+                payoff = self.compute_stock_path(volatility, market_price, iteration, strike, risk_aversion, rand)
+                payoffs_vol_stochastic.append(payoff)
+                volatility_constant = self.compute_constant_volatility_path()
+                payoff_c = self.compute_stock_path(volatility_constant, market_price, iteration, strike, risk_aversion, rand)
+                payoffs_vol_constant.append(payoff_c)
 
         payoffs_vol_stochastic.sort(key=lambda payoff: payoff.strike)
         payoffs_vol_constant.sort(key=lambda payoff: payoff.strike)
