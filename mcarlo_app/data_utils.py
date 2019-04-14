@@ -216,27 +216,27 @@ class DataRender:
         writer.writerow(['Volatility long', output.param.volatility_long])
         writer.writerow(['Market return ', output.param.market_return])
         writer.writerow(['Volatility sigma', output.param.market_volatility])
-        writer.writerow(['Risk aversion ', output.param.risk_aversion])
+        writer.writerow(['Iteration ', output.param.iterations])
         writer.writerow(['Maturity', output.param.maturity])
         writer.writerow(['Number of steps ', output.param.number_of_step])
         writer.writerow("Call")
         writer.writerow(
-            ['Strike price', 'Iteration', 'Vol const Price', ' Vol const sdt', 'Vol const Conf down', 'Vol const Conf up', 'Vol sto Price',
+            ['Strike price', 'Risk aversion', 'Vol const Price', ' Vol const sdt', 'Vol const Conf down', 'Vol const Conf up', 'Vol sto Price',
              ' Vol sto sdt ', 'Vol sto Conf down', 'Vol sto Conf up'])
         for item in output.call:
             writer.writerow(
-                [item.strike, item.iteration, val(item.vol_const.price), val(item.vol_const.std_error), val(item.vol_const.confidence_down),
+                [item.strike, item.risk_aversion, val(item.vol_const.price), val(item.vol_const.std_error), val(item.vol_const.confidence_down),
                  val(item.vol_const.confidence_up), val(item.vol_stockas.price), val(item.vol_stockas.std_error), val(item.vol_stockas.confidence_down),
                  val(item.vol_stockas.confidence_up)])
 
         writer.writerow("Put")
         writer.writerow(
-            ['Strike price', 'Iteration', 'Vol const Price', ' Vol const sdt', 'Vol const Conf down',
+            ['Strike price', 'Risk aversion', 'Vol const Price', ' Vol const sdt', 'Vol const Conf down',
              'Vol const Conf up', 'Vol sto Price',
              ' Vol sto sdt ', 'Vol sto Conf down', 'Vol sto conf up'])
         for item in output.put:
             writer.writerow(
-                [item.strike, item.iteration, val(item.vol_const.price), val(item.vol_const.std_error),
+                [item.strike, item.risk_aversion, val(item.vol_const.price), val(item.vol_const.std_error),
                  val(item.vol_const.confidence_down),
                  val(item.vol_const.confidence_up), val(item.vol_stockas.price), val(item.vol_stockas.std_error),
                  val(item.vol_stockas.confidence_down),

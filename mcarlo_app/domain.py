@@ -57,6 +57,7 @@ class RiskParam(Param):
        dict['risk_aversion'] = self.risk_aversion_display
        dict['strike'] = self.strike_display
        dict['iterations'] = self.iterations
+       return dict
 
 
 class IterationParam(Param):
@@ -72,6 +73,7 @@ class IterationParam(Param):
         dict['risk_aversion'] = self.risk_aversion
         dict['strike'] = self.strike_display
         dict['iterations'] = self.iterations_display
+        return dict
 
 class VolParam(Param):
     def __init__(self):
@@ -87,6 +89,7 @@ class VolParam(Param):
         dict['risk_aversion'] = self.aversion_display
         dict['strike'] = self.strike_display
         dict['iterations'] = self.iterations
+        return dict
 
 
 class Option:
