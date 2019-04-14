@@ -163,12 +163,12 @@
             <th>Iteration</th>
             <th>Price</th>
             <th>Std</th>
-            <th>Conf up</th>
             <th>Conf Down</th>
+            <th>Conf up</th>
             <th>Price</th>
             <th>Std Error</th>
-            <th>Conf Up</th>
             <th>Conf Down</th>
+            <th>Conf Up</th>
         </tr>
         </thead>
         <tbody>
@@ -187,10 +187,10 @@
                 {{ item.call.std_error|floatformat:4 }}
             </td>
             <td>
-                {{ item.call.confidence_up|floatformat:4 }}
+                {{ item.call.confidence_down|floatformat:4 }}
             </td>
             <td>
-                {{ item.call.confidence_down|floatformat:4 }}
+                {{ item.call.confidence_up|floatformat:4 }}
             </td>
             <td style="border-left-color:#3531ff">
                 {{ item.put.price|floatformat:4 }}
@@ -199,10 +199,10 @@
                 {{ item.put.std_error|floatformat:4 }}
             </td>
             <td>
-                {{ item.put.confidence_up|floatformat:4 }}
+                {{ item.put.confidence_down|floatformat:4 }}
             </td>
             <td>
-                {{ item.put.confidence_down|floatformat:4 }}
+                {{ item.put.confidence_up|floatformat:4 }}
             </td>
         </tr>
         {% endfor %}
